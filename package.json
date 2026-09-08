@@ -1,13 +1,25 @@
 {
   "name": "myxn-proxy",
   "version": "1.0.0",
+  "description": "StudyHub - Educational Web Proxy with Desktop OS Interface",
+  "main": "server.js",
   "type": "module",
-  "engines": { "node": ">=16" },
-  "scripts": { "start": "node server.js" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "proxy",
+    "ultraviolet",
+    "unblock"
+  ],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
-    "@mercuryworkshop/bare-mux": "^1.3.0",
-    "@titaniumnetwork-dev/ultraviolet": "^1.5.5",
-    "@tomphttp/bare-server-node": "^2.0.3",
-    "express": "^4.19.2"
-  }
+    "express": "^4.18.2",
+    "@titaniumnetwork-dev/ultraviolet": "^2.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {}
 }
