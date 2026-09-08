@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Proxy</title>
+  <meta charset="UTF-8">
+</head>
+<body style="margin: 0; padding: 0;">
+  <script src="/uv/uv.js"></script>
+  <script>
+    function uvConfig() {
+      return {
+        prefix: '/uv/service/',
+        bare: '/bare/',
+        logLevel: 'error',
+      };
+    }
+    
+    const params = new URLSearchParams(window.location.search);
+    const encodedUrl = params.get('url');
+    
+    if (encodedUrl) {
+      let url = encodedUrl;
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        const proxyUrl = __uv$config.prefix + __uv$codec.encodeUrl(url);
+        window.location.href = proxyUrl;
+      }
+    }
+  </script>
+</body>
+</html>
