@@ -1,6 +1,7 @@
 const PASSWORD = 'unblock';
 let windows = {};
 let windowZ = 100;
+let chatMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
 
 // Screen management
 function showScreen(screenId) {
@@ -8,15 +9,14 @@ function showScreen(screenId) {
   document.getElementById(screenId).classList.add('active');
 }
 
-// Password verification
-document.getElementById('enter-btn').addEventListener('click', () => {
+// Login
+document.getElementById('login-btn').addEventListener('click', () => {
   const input = document.getElementById('password-input');
   const error = document.getElementById('error-msg');
   
   if (input.value === PASSWORD) {
     error.classList.add('error-hidden');
-    showScreen('loading-screen');
-    setTimeout(() => showScreen('mode-screen'), 1500);
+    showScreen('mode-screen');
   } else {
     error.classList.remove('error-hidden');
     input.value = '';
@@ -24,11 +24,11 @@ document.getElementById('enter-btn').addEventListener('click', () => {
 });
 
 document.getElementById('password-input').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') document.getElementById('enter-btn').click();
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
 });
 
 // Mode selection
-document.querySelectorAll('.mode-btn').forEach(btn => {
+document.querySelectorAll('.mode-card').forEach(btn => {
   btn.addEventListener('click', () => {
     const mode = btn.dataset.mode;
     if (mode === 'os') {
@@ -41,15 +41,14 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
   });
 });
 
-// Desktop initialization
+// Desktop init
 function initDesktop() {
   updateClock();
   setInterval(updateClock, 1000);
   
-  document.querySelectorAll('.desktop-icon').forEach(icon => {
+  document.querySelectorAll('.sidebar-icon').forEach(icon => {
     icon.addEventListener('click', () => {
-      const windowType = icon.dataset.window;
-      openWindow(windowType);
+      openWindow(icon.dataset.window);
     });
   });
 }
@@ -61,188 +60,129 @@ function updateClock() {
     minute: '2-digit',
     hour12: true 
   });
-  document.getElementById('system-clock').textContent = time;
+  document.getElementById('clock').textContent = time;
 }
 
 function openWindow(type) {
   const id = `${type}-${Date.now()}`;
-  const container = document.getElementById('windows-container');
-  const window = document.createElement('div');
-  window.className = 'window active';
-  window.id = id;
-  window.style.left = `${100 + Math.random() * 300}px`;
-  window.style.top = `${80 + Math.random() * 200}px`;
-  window.style.width = type === 'browser' ? '800px' : '600px';
-  window.style.height = type === 'browser' ? '500px' : '400px';
-  window.style.zIndex = windowZ++;
+  const container = document.getElementById('windows-area');
+  const win = document.createElement('div');
+  win.className = 'window active';
+  win.id = id;
+  win.style.left = `${100 + Math.random() * 400}px`;
+  win.style.top = `${80 + Math.random() * 200}px`;
+  win.style.width = type === 'browser' ? '900px' : '600px';
+  win.style.height = type === 'browser' ? '550px' : '450px';
+  win.style.zIndex = windowZ++;
 
   let content = '';
   
-  switch(type) {
-    case 'browser':
-      content = `
-        <div class="window-header" data-movable="true">
-          <div class="window-header-title">🌐 Browser</div>
-          <div class="window-controls">
-            <div class="window-control"></div>
-            <div class="window-control"></div>
-            <div class="window-control window-close">✕</div>
-          </div>
+  if (type === 'browser') {
+    content = `
+      <div class="window-header" data-movable="true">
+        <div class="window-title">🌐 Browser</div>
+        <div class="window-controls">
+          <div class="window-control"></div>
+          <div class="window-control"></div>
+          <div class="window-control window-close">✕</div>
         </div>
-        <div class="window-content">
-          <div class="browser-header">
-            <input type="text" class="url-bar" placeholder="Enter URL (http://example.com)">
-            <button class="browser-go-btn">Go</button>
-          </div>
-          <div class="browser-frame">
-            <iframe></iframe>
-          </div>
+      </div>
+      <div class="window-content">
+        <div class="browser-controls">
+          <input type="text" class="url-bar" placeholder="Enter URL (http://example.com)">
+          <button class="url-go">Go</button>
         </div>
-      `;
-      break;
-      
-    case 'games':
-      content = `
-        <div class="window-header" data-movable="true">
-          <div class="window-header-title">🎮 Games</div>
-          <div class="window-controls">
-            <div class="window-control"></div>
-            <div class="window-control"></div>
-            <div class="window-control window-close">✕</div>
-          </div>
+        <div class="browser-frame">
+          <iframe></iframe>
         </div>
-        <div class="window-content">
-          <input type="text" placeholder="Search games..." class="games-search" style="margin-bottom: 10px;">
-          <div class="games-list"></div>
+      </div>
+    `;
+  } else if (type === 'movies') {
+    content = `
+      <div class="window-header" data-movable="true">
+        <div class="window-title">🎬 Movies</div>
+        <div class="window-controls">
+          <div class="window-control"></div>
+          <div class="window-control"></div>
+          <div class="window-control window-close">✕</div>
         </div>
-      `;
-      break;
-      
-    case 'chat':
-      content = `
-        <div class="window-header" data-movable="true">
-          <div class="window-header-title">💬 Study Group Chat</div>
-          <div class="window-controls">
-            <div class="window-control"></div>
-            <div class="window-control"></div>
-            <div class="window-control window-close">✕</div>
-          </div>
+      </div>
+      <div class="window-content">
+        <input type="text" class="movies-search" placeholder="Search movies...">
+        <div class="movies-grid"></div>
+      </div>
+    `;
+  } else if (type === 'games') {
+    content = `
+      <div class="window-header" data-movable="true">
+        <div class="window-title">🎮 Games</div>
+        <div class="window-controls">
+          <div class="window-control"></div>
+          <div class="window-control"></div>
+          <div class="window-control window-close">✕</div>
         </div>
-        <div class="window-content">
-          <div class="chat-messages">
-            <div class="chat-message">
-              <div class="author">Alex</div>
-              <div>Anyone done the math homework?</div>
-            </div>
-            <div class="chat-message">
-              <div class="author">Jordan</div>
-              <div>Still working on it, chapter 5 is tough</div>
-            </div>
-            <div class="chat-message">
-              <div class="author">Casey</div>
-              <div>Let's work on it together after class</div>
-            </div>
-          </div>
-          <div class="chat-input">
-            <input type="text" placeholder="Type message..." />
-            <button>Send</button>
-          </div>
+      </div>
+      <div class="window-content">
+        <input type="text" class="games-search" placeholder="Search games...">
+        <div class="games-list"></div>
+      </div>
+    `;
+  } else if (type === 'chat') {
+    content = `
+      <div class="window-header" data-movable="true">
+        <div class="window-title">💬 Friends Chat</div>
+        <div class="window-controls">
+          <div class="window-control"></div>
+          <div class="window-control"></div>
+          <div class="window-control window-close">✕</div>
         </div>
-      `;
-      break;
-      
-    case 'files':
-      content = `
-        <div class="window-header" data-movable="true">
-          <div class="window-header-title">📁 Files</div>
-          <div class="window-controls">
-            <div class="window-control"></div>
-            <div class="window-control"></div>
-            <div class="window-control window-close">✕</div>
-          </div>
+      </div>
+      <div class="window-content">
+        <div class="chat-messages"></div>
+        <div class="chat-input-area">
+          <input type="text" placeholder="Type message...">
+          <button>Send</button>
         </div>
-        <div class="window-content">
-          <div style="color: var(--text-dim); font-size: 12px;">
-            📄 homework.docx<br>
-            📊 project_data.xlsx<br>
-            🖼️ presentation.pptx<br>
-            📝 notes.txt<br>
-            📁 Study Materials
-          </div>
+      </div>
+    `;
+  } else if (type === 'settings') {
+    content = `
+      <div class="window-header" data-movable="true">
+        <div class="window-title">⚙️ Settings</div>
+        <div class="window-controls">
+          <div class="window-control"></div>
+          <div class="window-control"></div>
+          <div class="window-control window-close">✕</div>
         </div>
-      `;
-      break;
-      
-    case 'settings':
-      content = `
-        <div class="window-header" data-movable="true">
-          <div class="window-header-title">⚙️ Settings</div>
-          <div class="window-controls">
-            <div class="window-control"></div>
-            <div class="window-control"></div>
-            <div class="window-control window-close">✕</div>
-          </div>
+      </div>
+      <div class="window-content">
+        <div style="font-size: 12px; line-height: 1.8;">
+          <div style="color: var(--primary); margin-bottom: 15px;">System</div>
+          <div style="color: var(--text-dim); margin-bottom: 10px;">Version: 2.0</div>
+          <div style="color: var(--text-dim); margin-bottom: 15px;">Status: Online</div>
+          
+          <div style="color: var(--primary); margin-bottom: 15px;">Display</div>
+          <div style="color: var(--text-dim);">Theme: Dark (Galaxy Inspired)</div>
         </div>
-        <div class="window-content">
-          <div style="font-size: 12px; line-height: 1.8;">
-            <div style="color: var(--primary); margin-bottom: 15px;">Display</div>
-            <div style="color: var(--text-dim); margin-bottom: 10px;">Theme: Dark (Custom)</div>
-            <div style="color: var(--text-dim); margin-bottom: 15px;">Resolution: Auto</div>
-            
-            <div style="color: var(--primary); margin-bottom: 15px;">System</div>
-            <div style="color: var(--text-dim); margin-bottom: 10px;">Version: 1.0.0</div>
-            <div style="color: var(--text-dim);">Status: Online</div>
-          </div>
-        </div>
-      `;
-      break;
-      
-    case 'apps':
-      content = `
-        <div class="window-header" data-movable="true">
-          <div class="window-header-title">📱 Apps</div>
-          <div class="window-controls">
-            <div class="window-control"></div>
-            <div class="window-control"></div>
-            <div class="window-control window-close">✕</div>
-          </div>
-        </div>
-        <div class="window-content">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
-            <div style="padding: 10px; background: rgba(0,217,255,0.1); border-radius: 6px; text-align: center;">
-              📚 Study<br>Tools
-            </div>
-            <div style="padding: 10px; background: rgba(0,217,255,0.1); border-radius: 6px; text-align: center;">
-              🎯 Focus<br>Timer
-            </div>
-            <div style="padding: 10px; background: rgba(0,217,255,0.1); border-radius: 6px; text-align: center;">
-              📈 Notes<br>App
-            </div>
-            <div style="padding: 10px; background: rgba(0,217,255,0.1); border-radius: 6px; text-align: center;">
-              🔔 Schedule<br>Manager
-            </div>
-          </div>
-        </div>
-      `;
+      </div>
+    `;
   }
   
-  window.innerHTML = content;
-  container.appendChild(window);
+  win.innerHTML = content;
+  container.appendChild(win);
   
-  // Make window movable
-  makeWindowMovable(window);
+  makeWindowMovable(win);
   
-  // Close button
-  window.querySelector('.window-close').addEventListener('click', () => {
-    window.remove();
+  win.querySelector('.window-close').addEventListener('click', () => {
+    win.remove();
     updateTaskbar();
   });
   
   // Browser functionality
   if (type === 'browser') {
-    const urlBar = window.querySelector('.url-bar');
-    const goBtn = window.querySelector('.browser-go-btn');
-    const iframe = window.querySelector('iframe');
+    const urlBar = win.querySelector('.url-bar');
+    const goBtn = win.querySelector('.url-go');
+    const iframe = win.querySelector('iframe');
     
     const loadUrl = () => {
       let url = urlBar.value.trim();
@@ -260,11 +200,33 @@ function openWindow(type) {
     });
   }
   
+  // Movies functionality
+  if (type === 'movies') {
+    const moviesSearch = win.querySelector('.movies-search');
+    const moviesGrid = win.querySelector('.movies-grid');
+    const movies = getMovies();
+    
+    const renderMovies = (filter = '') => {
+      moviesGrid.innerHTML = movies
+        .filter(m => m.name.toLowerCase().includes(filter.toLowerCase()))
+        .map(m => `
+          <div class="movie-item" onclick="window.open('${m.url}', '_blank')">
+            <div>${m.icon}</div>
+            <div>${m.name}</div>
+          </div>
+        `)
+        .join('');
+    };
+    
+    renderMovies();
+    moviesSearch.addEventListener('input', (e) => renderMovies(e.target.value));
+  }
+  
   // Games functionality
   if (type === 'games') {
-    const gamesList = window.querySelector('.games-list');
-    const gamesSearch = window.querySelector('.games-search');
-    const games = getGamesList();
+    const gamesSearch = win.querySelector('.games-search');
+    const gamesList = win.querySelector('.games-list');
+    const games = getGames();
     
     const renderGames = (filter = '') => {
       gamesList.innerHTML = games
@@ -275,6 +237,41 @@ function openWindow(type) {
     
     renderGames();
     gamesSearch.addEventListener('input', (e) => renderGames(e.target.value));
+  }
+  
+  // Chat functionality
+  if (type === 'chat') {
+    const chatMessagesDiv = win.querySelector('.chat-messages');
+    const input = win.querySelector('input');
+    const sendBtn = win.querySelector('button');
+    
+    const renderChat = () => {
+      chatMessagesDiv.innerHTML = chatMessages.map(msg => `
+        <div class="chat-msg">
+          <div class="chat-author">${msg.author}</div>
+          <div>${msg.text}</div>
+        </div>
+      `).join('');
+      chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    };
+    
+    const sendMessage = () => {
+      if (input.value.trim()) {
+        chatMessages.push({
+          author: 'You',
+          text: input.value.trim()
+        });
+        localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+        input.value = '';
+        renderChat();
+      }
+    };
+    
+    renderChat();
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
   }
   
   updateTaskbar();
@@ -308,30 +305,43 @@ function makeWindowMovable(windowEl) {
 }
 
 function updateTaskbar() {
-  const taskbarItems = document.getElementById('taskbar-items');
-  const windows = document.querySelectorAll('.window');
+  const taskbarLeft = document.getElementById('taskbar-left');
+  const winEls = document.querySelectorAll('.window');
   
-  taskbarItems.innerHTML = '';
+  taskbarLeft.innerHTML = '';
   
-  windows.forEach(w => {
-    const title = w.querySelector('.window-header-title').textContent;
+  winEls.forEach(w => {
+    const title = w.querySelector('.window-title').textContent;
     const item = document.createElement('div');
     item.className = 'taskbar-item active';
     item.textContent = title;
     item.addEventListener('click', () => {
       w.style.zIndex = windowZ++;
     });
-    taskbarItems.appendChild(item);
+    taskbarLeft.appendChild(item);
   });
 }
 
-function getGamesList() {
+function getMovies() {
+  return [
+    { icon: '🎬', name: 'Tubi', url: 'https://www.tubi.tv' },
+    { icon: '📺', name: 'Pluto TV', url: 'https://www.plutotv.com' },
+    { icon: '🎥', name: 'YouTube Movies', url: 'https://www.youtube.com/results?search_query=free+movies' },
+    { icon: '📽️', name: 'Internet Archive', url: 'https://archive.org/details/movies' },
+    { icon: '🎭', name: 'Public Domain', url: 'https://www.publicdomainreview.org/collections/films/' },
+    { icon: '🎪', name: 'Kanopy', url: 'https://www.kanopy.com' },
+    { icon: '🎞️', name: 'Hoopla', url: 'https://www.hoopladigital.com' },
+    { icon: '🍿', name: 'Plex', url: 'https://www.plex.tv' },
+  ];
+}
+
+function getGames() {
   return [
     '2048', 'Cookie Clicker', 'Flappy Bird', 'Dino Runner',
     'Pac-Man', 'Snake', 'Tetris', 'Breakout',
     'Space Invaders', 'Pong', 'Minesweeper', 'Sudoku',
-    'Chess', 'Checkers', 'Tic-Tac-Toe', 'Memory',
-    'Geometry Dash', 'Jump King', 'Platform Quest', 'Parkour Pro',
+    'Chess', 'Checkers', 'Tic-Tac-Toe', 'Memory Game',
+    'Geometry Dash', 'Jump King', 'Platform Quest', 'Parkour',
     'Basketball Stars', 'Soccer Physics', 'Racing Legends', 'Bike Stunt',
     'Crossy Road', 'Krunker.io', 'Agar.io', 'Slither.io',
     'Wordle', 'Hangman', 'Word Search', 'Crossword'
@@ -341,14 +351,14 @@ function getGamesList() {
 function initGamesMode() {
   const gamesGrid = document.getElementById('games-grid');
   const gamesSearch = document.getElementById('games-search');
-  const games = getGamesList();
+  const games = getGames();
   
   const renderGames = (filter = '') => {
     gamesGrid.innerHTML = games
       .filter(g => g.toLowerCase().includes(filter.toLowerCase()))
       .map(g => `
         <div class="game-card">
-          <div class="icon">🎮</div>
+          <div class="game-card-icon">🎮</div>
           <div>${g}</div>
         </div>
       `)
@@ -359,7 +369,7 @@ function initGamesMode() {
   gamesSearch.addEventListener('input', (e) => renderGames(e.target.value));
 }
 
-// Register service worker
+// Service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(console.error);
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
