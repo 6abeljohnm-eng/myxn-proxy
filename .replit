@@ -1,1 +1,11 @@
+[env]
+PATH = "/opt/nodejs/18/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+[nix]
+channel = "stable-22.11"
+
+[nix.packages]
+nodejs = "18.13.0"
+npm = "9.8.0"
+
 run = "npm start"
