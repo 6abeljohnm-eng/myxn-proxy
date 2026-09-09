@@ -7,126 +7,71 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- StudyHub Cover -->
-  <div id="cover-screen" class="screen active">
-    <div class="cover-container">
-      <div class="logo-section">
-        <div class="logo">📚</div>
+  <!-- Login Screen -->
+  <div id="login-screen" class="screen active">
+    <div class="login-container">
+      <div class="login-box">
         <h1>StudyHub</h1>
-        <p>Collaborative Learning Platform</p>
-      </div>
-      
-      <div class="auth-box">
-        <h2>Access Code</h2>
+        <p>Access Code</p>
         <input 
           type="password" 
           id="password-input" 
-          placeholder="Enter access code" 
+          placeholder="Enter code"
           autocomplete="off"
         >
-        <button id="enter-btn">Enter</button>
+        <button id="login-btn">Enter</button>
         <p id="error-msg" class="error-hidden">Invalid code</p>
       </div>
-      
-      <div class="footer-text">
-        <p>© 2024 StudyHub Educational Network</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Loading Screen -->
-  <div id="loading-screen" class="screen">
-    <div class="loading-container">
-      <div class="loader"></div>
-      <p>Initializing StudyHub...</p>
     </div>
   </div>
 
   <!-- Mode Selection -->
   <div id="mode-screen" class="screen">
     <div class="mode-container">
-      <h1>StudyHub Mode Selection</h1>
-      <div class="mode-buttons">
-        <button class="mode-btn os-btn" data-mode="os">
+      <h1>Select Mode</h1>
+      <div class="mode-grid">
+        <button class="mode-card os-btn" data-mode="os">
           <span class="mode-icon">🖥️</span>
-          <span class="mode-name">OS Mode</span>
-          <span class="mode-desc">Full Desktop Experience</span>
+          <span>Desktop</span>
         </button>
-        <button class="mode-btn games-btn" data-mode="games">
+        <button class="mode-card games-btn" data-mode="games">
           <span class="mode-icon">🎮</span>
-          <span class="mode-name">Games Only</span>
-          <span class="mode-desc">Quick Game Access</span>
+          <span>Games</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- OS Mode Desktop -->
+  <!-- Desktop OS -->
   <div id="os-screen" class="screen">
-    <div class="desktop-container">
-      <!-- Desktop Icons -->
-      <div class="desktop-icons">
-        <div class="desktop-icon" data-window="browser">
-          <div class="icon">🌐</div>
-          <p>Browser</p>
-        </div>
-        <div class="desktop-icon" data-window="games">
-          <div class="icon">🎮</div>
-          <p>Games</p>
-        </div>
-        <div class="desktop-icon" data-window="apps">
-          <div class="icon">📱</div>
-          <p>Apps</p>
-        </div>
-        <div class="desktop-icon" data-window="chat">
-          <div class="icon">💬</div>
-          <p>Study Chat</p>
-        </div>
-        <div class="desktop-icon" data-window="files">
-          <div class="icon">📁</div>
-          <p>Files</p>
-        </div>
-        <div class="desktop-icon" data-window="settings">
-          <div class="icon">⚙️</div>
-          <p>Settings</p>
-        </div>
+    <div class="desktop">
+      <!-- Sidebar Icons -->
+      <div class="sidebar">
+        <div class="sidebar-icon" data-window="browser" title="Browser">🌐</div>
+        <div class="sidebar-icon" data-window="movies" title="Movies">🎬</div>
+        <div class="sidebar-icon" data-window="games" title="Games">🎮</div>
+        <div class="sidebar-icon" data-window="chat" title="Chat">💬</div>
+        <div class="sidebar-icon" data-window="settings" title="Settings">⚙️</div>
       </div>
 
-      <!-- Windows Container -->
-      <div class="windows-container" id="windows-container"></div>
+      <!-- Windows Area -->
+      <div class="windows-area" id="windows-area"></div>
 
       <!-- Taskbar -->
       <div class="taskbar">
-        <div class="taskbar-left">
-          <button class="start-btn">Start</button>
-          <div class="taskbar-items" id="taskbar-items"></div>
-        </div>
-        <div class="taskbar-right">
-          <div class="system-clock" id="system-clock">12:00 PM</div>
-        </div>
+        <div class="taskbar-left" id="taskbar-left"></div>
+        <div class="taskbar-center" id="clock">00:00</div>
       </div>
     </div>
   </div>
 
-  <!-- Games Only Mode -->
+  <!-- Games Screen -->
   <div id="games-screen" class="screen">
-    <div class="games-fullscreen">
-      <div class="games-header">
-        <h1>Unblocked Games</h1>
-        <input 
-          type="text" 
-          id="games-search" 
-          placeholder="Search games..." 
-          class="games-search"
-        >
-      </div>
-      <div class="games-grid" id="games-grid"></div>
+    <div class="games-container">
+      <h1>Games</h1>
+      <input type="text" id="games-search" placeholder="Search games..." class="search-bar">
+      <div id="games-grid" class="games-grid"></div>
     </div>
-  </div>
-
-  <!-- Proxy Container (hidden) -->
-  <div id="proxy-container" style="display: none;">
-    <iframe id="proxy-frame" src=""></iframe>
   </div>
 
   <script src="app.js"></script>
