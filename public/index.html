@@ -3,74 +3,347 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudyHub</title>
+  <title>StudyHub - Learning Platform</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Login Screen -->
+  <!-- ============ LOGIN SCREEN ============ -->
   <div id="login-screen" class="screen active">
-    <div class="login-container">
-      <div class="login-box">
-        <h1>StudyHub</h1>
-        <p>Access Code</p>
-        <input 
-          type="password" 
-          id="password-input" 
-          placeholder="Enter code"
-          autocomplete="off"
-        >
-        <button id="login-btn">Enter</button>
-        <p id="error-msg" class="error-hidden">Invalid code</p>
+    <div class="login-bg">
+      <div class="login-stars"></div>
+      <div class="login-grid"></div>
+    </div>
+    
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="logo-container">
+            <div class="logo-glow"></div>
+            <div class="logo-icon">📚</div>
+            <h1 class="logo-text">StudyHub</h1>
+            <p class="logo-subtitle">Advanced Learning Platform v4</p>
+          </div>
+        </div>
+
+        <div class="login-form-wrapper">
+          <div class="form-group">
+            <label for="password-input" class="form-label">Access Credentials</label>
+            <div class="input-wrapper">
+              <span class="input-prefix">🔐</span>
+              <input 
+                type="password" 
+                id="password-input" 
+                class="form-input"
+                placeholder="Enter access code"
+                autocomplete="off"
+                spellcheck="false"
+              >
+              <span class="input-focus-border"></span>
+            </div>
+          </div>
+
+          <button id="login-btn" class="login-btn-primary">
+            <span class="btn-text">Access System</span>
+            <span class="btn-icon">→</span>
+          </button>
+
+          <div class="error-container">
+            <span id="error-msg" class="error-text"></span>
+          </div>
+
+          <div class="login-footer">
+            <p class="footer-text">Secure Educational Access | v4.0</p>
+            <div class="footer-stats">
+              <div class="stat">
+                <span class="stat-label">Users Online</span>
+                <span class="stat-value">2,847</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Uptime</span>
+                <span class="stat-value">99.9%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-decorations">
+          <div class="decoration-line"></div>
+          <div class="decoration-dot"></div>
+          <div class="decoration-dot"></div>
+          <div class="decoration-dot"></div>
+        </div>
+      </div>
+
+      <div class="login-info-panel">
+        <div class="info-block">
+          <h3>Security</h3>
+          <p>End-to-end encrypted connections</p>
+        </div>
+        <div class="info-block">
+          <h3>Speed</h3>
+          <p>Ultra-fast proxy performance</p>
+        </div>
+        <div class="info-block">
+          <h3>Privacy</h3>
+          <p>Zero-log policy enforced</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Mode Selection -->
+  <!-- ============ MODE SELECTION SCREEN ============ -->
   <div id="mode-screen" class="screen">
-    <div class="mode-container">
-      <h1>Select Mode</h1>
-      <div class="mode-grid">
-        <button class="mode-card os-btn" data-mode="os">
-          <span class="mode-icon">🖥️</span>
-          <span>Desktop</span>
-        </button>
-        <button class="mode-card games-btn" data-mode="games">
-          <span class="mode-icon">🎮</span>
-          <span>Games</span>
-        </button>
+    <div class="mode-bg-gradient"></div>
+    
+    <div class="mode-wrapper">
+      <div class="mode-header">
+        <h2 class="mode-title">Experience Mode</h2>
+        <p class="mode-subtitle">Select your learning environment</p>
+      </div>
+
+      <div class="mode-options">
+        <div class="mode-option-wrapper">
+          <button class="mode-option desktop-mode" data-mode="os">
+            <div class="mode-preview">
+              <div class="preview-bar"></div>
+              <div class="preview-content">
+                <div class="preview-icon">🖥️</div>
+              </div>
+            </div>
+            <div class="mode-details">
+              <h3 class="mode-name">Desktop Mode</h3>
+              <p class="mode-desc">Full operating system with browser, chat, games, and productivity tools</p>
+              <ul class="mode-features">
+                <li>📱 Multi-window interface</li>
+                <li>🌐 Web browser proxy</li>
+                <li>💬 Real-time chat</li>
+                <li>🎮 Game library</li>
+                <li>📝 Note-taking tools</li>
+              </ul>
+            </div>
+            <div class="mode-cta">Start Desktop</div>
+          </button>
+        </div>
+
+        <div class="mode-option-wrapper">
+          <button class="mode-option games-mode" data-mode="games">
+            <div class="mode-preview">
+              <div class="preview-grid">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+              </div>
+            </div>
+            <div class="mode-details">
+              <h3 class="mode-name">Games Mode</h3>
+              <p class="mode-desc">Quick-access gaming experience with searchable library</p>
+              <ul class="mode-features">
+                <li>🎮 500+ games</li>
+                <li>🔍 Smart search</li>
+                <li>⭐ Favorites</li>
+                <li>📊 Leaderboard</li>
+                <li>🎯 Categories</li>
+              </ul>
+            </div>
+            <div class="mode-cta">Launch Games</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="mode-footer">
+        <p>All modes fully responsive • Secure • Ad-free</p>
       </div>
     </div>
   </div>
 
-  <!-- Desktop OS -->
+  <!-- ============ DESKTOP OS SCREEN ============ -->
   <div id="os-screen" class="screen">
-    <div class="desktop">
-      <!-- Sidebar Icons -->
-      <div class="sidebar">
-        <div class="sidebar-icon" data-window="browser" title="Browser">🌐</div>
-        <div class="sidebar-icon" data-window="movies" title="Movies">🎬</div>
-        <div class="sidebar-icon" data-window="games" title="Games">🎮</div>
-        <div class="sidebar-icon" data-window="chat" title="Chat">💬</div>
-        <div class="sidebar-icon" data-window="settings" title="Settings">⚙️</div>
+    <div class="os-container">
+      <!-- System Top Bar -->
+      <div class="system-topbar">
+        <div class="topbar-left">
+          <div class="window-switcher" id="window-switcher">
+            <button class="switcher-btn" id="switcher-toggle">
+              <span class="switcher-icon">◀</span>
+              <span class="switcher-label">Windows</span>
+            </button>
+          </div>
+          <div class="topbar-signal">
+            <span class="signal-bar"></span>
+            <span class="signal-bar"></span>
+            <span class="signal-bar"></span>
+            <span class="signal-label">Connected</span>
+          </div>
+        </div>
+
+        <div class="topbar-center">
+          <div class="system-clock" id="system-clock">00:00</div>
+          <div class="system-date" id="system-date">Monday</div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="topbar-stats">
+            <div class="stat-item cpu">
+              <span class="stat-icon">⚙️</span>
+              <span class="stat-name">CPU</span>
+              <span class="stat-value">24%</span>
+            </div>
+            <div class="stat-item memory">
+              <span class="stat-icon">💾</span>
+              <span class="stat-name">RAM</span>
+              <span class="stat-value">62%</span>
+            </div>
+            <div class="stat-item network">
+              <span class="stat-icon">📡</span>
+              <span class="stat-name">Net</span>
+              <span class="stat-value">Fast</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Windows Area -->
-      <div class="windows-area" id="windows-area"></div>
+      <!-- Main Content Area -->
+      <div class="os-main">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-panel">
+          <div class="sidebar-header">
+            <div class="sidebar-logo">SH</div>
+            <h2 class="sidebar-title">StudyHub</h2>
+          </div>
 
-      <!-- Taskbar -->
-      <div class="taskbar">
-        <div class="taskbar-left" id="taskbar-left"></div>
-        <div class="taskbar-center" id="clock">00:00</div>
+          <nav class="sidebar-menu">
+            <div class="menu-section">
+              <div class="menu-section-title">Apps</div>
+              <button class="menu-item" data-window="browser">
+                <span class="menu-icon">🌐</span>
+                <span class="menu-text">Browser</span>
+                <span class="menu-badge">New</span>
+              </button>
+              <button class="menu-item" data-window="movies">
+                <span class="menu-icon">🎬</span>
+                <span class="menu-text">Movies</span>
+                <span class="menu-badge">2k+</span>
+              </button>
+              <button class="menu-item" data-window="games">
+                <span class="menu-icon">🎮</span>
+                <span class="menu-text">Games</span>
+                <span class="menu-badge">500+</span>
+              </button>
+              <button class="menu-item" data-window="chat">
+                <span class="menu-icon">💬</span>
+                <span class="menu-text">Chat</span>
+                <span class="menu-badge">Online</span>
+              </button>
+            </div>
+
+            <div class="menu-section">
+              <div class="menu-section-title">Tools</div>
+              <button class="menu-item" data-window="notes">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">Notes</span>
+              </button>
+              <button class="menu-item" data-window="files">
+                <span class="menu-icon">📁</span>
+                <span class="menu-text">Files</span>
+              </button>
+              <button class="menu-item" data-window="settings">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">Settings</span>
+              </button>
+            </div>
+
+            <div class="menu-section">
+              <div class="menu-section-title">Workspace</div>
+              <button class="menu-item" data-window="terminal">
+                <span class="menu-icon">💻</span>
+                <span class="menu-text">Terminal</span>
+              </button>
+              <button class="menu-item" data-window="apps">
+                <span class="menu-icon">📱</span>
+                <span class="menu-text">App Store</span>
+              </button>
+            </div>
+          </nav>
+
+          <div class="sidebar-footer">
+            <button class="sidebar-action logout-btn" id="logout-btn">
+              <span class="action-icon">🚪</span>
+              <span class="action-text">Exit System</span>
+            </button>
+            <div class="sidebar-version">v4.0</div>
+          </div>
+        </aside>
+
+        <!-- Windows Workspace -->
+        <main class="workspace">
+          <div class="windows-area" id="windows-area"></div>
+          <div class="workspace-overlay" id="workspace-overlay"></div>
+        </main>
+      </div>
+
+      <!-- System Taskbar -->
+      <div class="system-taskbar">
+        <div class="taskbar-apps" id="taskbar-apps"></div>
+        
+        <div class="taskbar-divider"></div>
+
+        <div class="taskbar-tray">
+          <button class="tray-item volume-control" title="Volume">
+            <span class="tray-icon">🔊</span>
+            <span class="tray-value">75%</span>
+          </button>
+          <button class="tray-item network-control" title="Network">
+            <span class="tray-icon">📶</span>
+            <span class="tray-value">Strong</span>
+          </button>
+          <button class="tray-item battery-control" title="Battery">
+            <span class="tray-icon">🔋</span>
+            <span class="tray-value">98%</span>
+          </button>
+          <button class="tray-item settings-control" title="Quick Settings">
+            <span class="tray-icon">⚡</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Games Screen -->
+  <!-- ============ GAMES FULLSCREEN MODE ============ -->
   <div id="games-screen" class="screen">
     <div class="games-container">
-      <h1>Games</h1>
-      <input type="text" id="games-search" placeholder="Search games..." class="search-bar">
-      <div id="games-grid" class="games-grid"></div>
+      <div class="games-header">
+        <div class="games-header-top">
+          <h1 class="games-title">Game Library</h1>
+          <button class="games-back-btn" id="games-back">← Back</button>
+        </div>
+
+        <div class="games-controls">
+          <input 
+            type="text" 
+            id="games-search" 
+            class="games-search-field"
+            placeholder="🔍 Search 500+ games..."
+          >
+          <div class="games-filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="action">Action</button>
+            <button class="filter-tab" data-filter="puzzle">Puzzle</button>
+            <button class="filter-tab" data-filter="strategy">Strategy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="games-content">
+        <div class="games-grid" id="games-grid"></div>
+        <div class="games-empty" style="display: none;">
+          <p>No games found</p>
+        </div>
+      </div>
+
+      <div class="games-footer">
+        <p>Showing <span id="game-count">24</span> games</p>
+      </div>
     </div>
   </div>
 
