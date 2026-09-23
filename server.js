@@ -1,80 +1,21 @@
-// ============ DEPENDENCIES ============
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
-import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import dotenv from 'dotenv';
-import chalk from 'chalk';
-import fs from 'fs';
-
-// ============ CONFIGURATION ============
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
 
-const CONFIG = {
-  environment: process.env.NODE_ENV || 'production',
-  port: PORT,
-  host: HOST,
-  proxySecret: process.env.PROXY_SECRET || 'default_secret',
-  logLevel: process.env.LOG_LEVEL || 'info',
-  maxConnections: parseInt(process.env.MAX_CONNECTIONS) || 1000,
-  proxyTimeout: parseInt(process.env.PROXY_TIMEOUT) || 30000,
-  enableCors: process.env.ENABLE_CORS === 'true',
-  allowedOrigins: process.env.ALLOWED_ORIGINS || '*',
-};
+// ============================================================================
+// MIDDLEWARE
+// ============================================================================
 
-// ============ LOGGING ============
-
-class Logger {
-  constructor(level = 'info') {
-    this.level = level;
-    this.levels = {
-      debug: 0,
-      info: 1,
-      warn: 2,
-      error: 3,
-    };
-  }
-
-  log(level, message, data = '') {
-    if (this.levels[level] < this.levels[this.level]) return;
-
-    const timestamp = new Date().toISOString();
-    const prefix = {
-      debug: chalk.gray('[DEBUG]'),
-      info: chalk.blue('[INFO]'),
-      warn: chalk.yellow('[WARN]'),
-      error: chalk.red('[ERROR]'),
-    }[level];
-
-    const formattedMessage = `${prefix} ${chalk.gray(timestamp)} ${message}`;
-    
-    if (data) {
-      console.log(formattedMessage, chalk.cyan(data));
-    } else {
-      console.log(formattedMessage);
-    }
-  }
-
-  debug(message, data) { this.log('debug', message, data); }
-  info(message, data) { this.log('info', message, data); }
-  warn(message, data) { this.log('warn', message, data); }
-  error(message, data) { this.log('error', message, data); }
-}
-
-const logger = new Logger(CONFIG.logLevel);
-
-// ============ MIDDLEWARE ============
-
+// Security headers
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -82,256 +23,315 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", '*'],
+      connectSrc: ["'self'"],
       frameSrc: ["'self'", '*'],
       objectSrc: ["'none'"],
     },
   },
   crossOriginEmbedderPolicy: false,
-  crossOriginOpenerPolicy: false,
-  crossOriginResourcePolicy: false,
 }));
 
-app.use(compression());
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+// CORS
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['*'],
+}));
 
-if (CONFIG.enableCors) {
-  app.use(cors({
-    origin: CONFIG.allowedOrigins === '*' ? '*' : CONFIG.allowedOrigins.split(','),
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }));
-}
+// Compression
+app.use(compression({
+  level: 6,
+  threshold: 1024,
+}));
 
-// ============ REQUEST LOGGING ============
+// Body parsing
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  
-  res.on('finish', () => {
-    const duration = Date.now() - start;
-    const statusColor = res.statusCode >= 400 ? chalk.red : chalk.green;
-    logger.debug(
-      `${req.method} ${req.path} ${statusColor(res.statusCode)} (${duration}ms)`
-    );
-  });
-
-  next();
-});
-
-// ============ STATIC FILES ============
-
+// Static files
 app.use(express.static(join(__dirname, 'public'), {
-  maxAge: '1h',
+  maxAge: '1d',
   etag: false,
 }));
 
-// ============ ROUTES ============
+// ============================================================================
+// LOGGING
+// ============================================================================
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: CONFIG.environment,
-  });
-});
+const logger = {
+  info: (msg) => console.log(`[${new Date().toISOString()}] ✓ ${msg}`),
+  error: (msg) => console.error(`[${new Date().toISOString()}] ✗ ${msg}`),
+  warn: (msg) => console.warn(`[${new Date().toISOString()}] ⚠ ${msg}`),
+};
 
-// API status
-app.get('/api/status', (req, res) => {
-  res.json({
-    server: 'StudyHub v4',
-    online: true,
-    proxy: 'Ultraviolet',
-    version: '4.0.0',
-    timestamp: new Date().toISOString(),
-    connections: req.app.get('activeConnections') || 0,
-    maxConnections: CONFIG.maxConnections,
-  });
-});
+// ============================================================================
+// PROXY UTILITIES
+// ============================================================================
 
-// Proxy configuration endpoint
-app.get('/api/proxy/config', (req, res) => {
-  res.json({
-    enabled: true,
-    type: 'ultraviolet',
-    timeout: CONFIG.proxyTimeout,
-    secure: true,
-    encryption: 'TLS 1.3',
-  });
-});
-
-// Proxy stats
-app.get('/api/proxy/stats', (req, res) => {
-  const uptime = process.uptime();
-  const memoryUsage = process.memoryUsage();
-  
-  res.json({
-    uptime: {
-      seconds: Math.floor(uptime),
-      formatted: formatUptime(uptime),
-    },
-    memory: {
-      heapUsed: Math.round(memoryUsage.heapUsed / 1024 / 1024),
-      heapTotal: Math.round(memoryUsage.heapTotal / 1024 / 1024),
-      external: Math.round(memoryUsage.external / 1024 / 1024),
-      unit: 'MB',
-    },
-    connections: {
-      active: req.app.get('activeConnections') || 0,
-      max: CONFIG.maxConnections,
-    },
-    cpu: process.cpuUsage(),
-  });
-});
-
-// Proxy endpoint
-app.post('/api/proxy', (req, res) => {
+function encodeUrl(targetUrl) {
   try {
-    const { url, method = 'GET', headers = {}, body = null } = req.body;
+    return Buffer.from(targetUrl).toString('base64');
+  } catch (e) {
+    return '';
+  }
+}
 
+function decodeUrl(encoded) {
+  try {
+    return Buffer.from(encoded, 'base64').toString('utf-8');
+  } catch (e) {
+    return '';
+  }
+}
+
+function validateUrl(targetUrl) {
+  try {
+    if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+      targetUrl = 'https://' + targetUrl;
+    }
+    const parsed = new URL(targetUrl);
+    return parsed.href;
+  } catch (e) {
+    return null;
+  }
+}
+
+function injectProxyScript(html) {
+  const proxyScript = `
+    <script>
+      window.__proxyConfig = {
+        prefix: '/uv/',
+        encodeUrl: (url) => btoa(url),
+      };
+      (function() {
+        const originalFetch = window.fetch;
+        const originalXHR = window.XMLHttpRequest.prototype.open;
+        
+        window.fetch = function(resource, ...args) {
+          if (typeof resource === 'string' && !resource.startsWith('/') && !resource.startsWith('http://localhost')) {
+            resource = '/uv/service?url=' + btoa(resource);
+          }
+          return originalFetch.call(this, resource, ...args);
+        };
+        
+        window.XMLHttpRequest.prototype.open = function(method, url, ...args) {
+          if (typeof url === 'string' && !url.startsWith('/') && !url.startsWith('http://localhost')) {
+            url = '/uv/service?url=' + btoa(new URL(url, window.location.href).href);
+          }
+          return originalXHR.call(this, method, url, ...args);
+        };
+      })();
+    </script>
+  `;
+  
+  if (html && html.includes('</head>')) {
+    return html.replace('</head>', proxyScript + '</head>');
+  }
+  return html;
+}
+
+// ============================================================================
+// UV PROXY ROUTES
+// ============================================================================
+
+/**
+ * Main proxy service endpoint
+ * GET /uv/service?url=<base64-encoded-url>
+ */
+app.get('/uv/service', async (req, res) => {
+  try {
+    const encodedUrl = req.query.url;
+    
+    if (!encodedUrl) {
+      return res.status(400).json({ error: 'No URL provided' });
+    }
+    
+    const targetUrl = decodeUrl(encodedUrl);
+    const validatedUrl = validateUrl(targetUrl);
+    
+    if (!validatedUrl) {
+      logger.error(`Invalid URL: ${targetUrl}`);
+      return res.status(400).json({ error: 'Invalid URL' });
+    }
+    
+    logger.info(`Proxying: ${validatedUrl}`);
+    
+    const response = await fetch(validatedUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
+      timeout: 30000,
+    });
+    
+    const contentType = response.headers.get('content-type') || '';
+    const data = await response.text();
+    
+    res.set('Content-Type', contentType);
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('X-Frame-Options', 'ALLOWALL');
+    res.set('X-Content-Type-Options', 'nosniff');
+    res.set('Cache-Control', 'no-cache, no-store');
+    
+    if (contentType.includes('text/html')) {
+      return res.send(injectProxyScript(data));
+    }
+    
+    res.send(data);
+  } catch (error) {
+    logger.error(`Proxy error: ${error.message}`);
+    res.status(500).json({ error: 'Proxy request failed', details: error.message });
+  }
+});
+
+/**
+ * Proxy API endpoint
+ * POST /uv/api/proxy
+ */
+app.post('/uv/api/proxy', express.json(), async (req, res) => {
+  try {
+    const { url, method = 'GET', headers = {}, body } = req.body;
+    
     if (!url) {
-      return res.status(400).json({
-        error: 'Missing URL parameter',
-        code: 'INVALID_REQUEST',
-      });
+      return res.status(400).json({ error: 'URL required' });
     }
-
-    // Validate URL
-    try {
-      new URL(url);
-    } catch {
-      return res.status(400).json({
-        error: 'Invalid URL format',
-        code: 'INVALID_URL',
-      });
+    
+    const validatedUrl = validateUrl(url);
+    if (!validatedUrl) {
+      return res.status(400).json({ error: 'Invalid URL' });
     }
-
-    res.json({
-      status: 'proxied',
-      url,
+    
+    const options = {
       method,
-      timestamp: new Date().toISOString(),
-      message: 'Use browser proxy endpoint for actual proxying',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        ...headers,
+      },
+    };
+    
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+    
+    const response = await fetch(validatedUrl, options);
+    const data = await response.text();
+    
+    res.json({
+      status: response.status,
+      headers: Object.fromEntries(response.headers),
+      body: data,
     });
   } catch (error) {
-    logger.error('Proxy error:', error.message);
-    res.status(500).json({
-      error: 'Proxy error',
-      message: error.message,
-      code: 'PROXY_ERROR',
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Ultraviolet proxy path
-app.use('/uv/', express.static(join(__dirname, 'public', 'uv')));
+/**
+ * UV health check
+ * GET /uv/health
+ */
+app.get('/uv/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
 
-// Service configuration for Ultraviolet
-app.get('/uv-config.json', (req, res) => {
+/**
+ * UV configuration endpoint
+ * GET /uv/config
+ */
+app.get('/uv/config', (req, res) => {
   res.json({
     prefix: '/uv/',
-    codec: 'xor',
-    loglevel: 'debug',
-    handler: '/uv/service-worker.js',
-    bundle: '/uv/bundle.js',
-    config: '/uv/config.js',
-    sw: '/uv/sw.js',
+    bare: '/bare/',
+    encodeUrl: true,
+    routes: {
+      service: '/uv/service',
+      api: '/uv/api/proxy',
+      health: '/uv/health',
+    },
   });
 });
 
-// Proxy HTML handler
-app.get('/proxy.html', (req, res) => {
-  const url = req.query.url;
-  if (!url) {
-    return res.status(400).send('Missing URL parameter');
-  }
+/**
+ * Catch-all for UV static assets
+ */
+app.use('/uv/assets', express.static(join(__dirname, 'public/uv/assets')));
+app.use('/uv/js', express.static(join(__dirname, 'public/uv/js')));
+app.use('/uv/css', express.static(join(__dirname, 'public/uv/css')));
 
-  res.sendFile(join(__dirname, 'public', 'proxy.html'));
+// ============================================================================
+// API ROUTES
+// ============================================================================
+
+app.get('/api/status', (req, res) => {
+  res.json({
+    status: 'online',
+    version: '4.0.0',
+    timestamp: new Date().toISOString(),
+  });
 });
 
-// Root route
+app.get('/api/proxy/config', (req, res) => {
+  res.json({
+    proxyEnabled: true,
+    services: ['uv', 'bare'],
+    endpoints: {
+      uv: '/uv/service',
+      api: '/uv/api/proxy',
+    },
+  });
+});
+
+// ============================================================================
+// ROOT ROUTE
+// ============================================================================
+
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'));
+  res.sendFile(join(__dirname, 'public/index.html'));
 });
 
-// Catch-all for single-page app
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'));
+app.get('/proxy.html', (req, res) => {
+  res.sendFile(join(__dirname, 'public/proxy.html'));
 });
 
-// ============ ERROR HANDLING ============
-
-app.use((err, req, res, next) => {
-  logger.error('Unhandled error:', err.message);
-  
-  res.status(500).json({
-    error: 'Internal server error',
-    message: CONFIG.environment === 'development' ? err.message : 'An error occurred',
-    code: 'INTERNAL_ERROR',
-  });
-});
+// ============================================================================
+// ERROR HANDLING
+// ============================================================================
 
 app.use((req, res) => {
   res.status(404).json({
     error: 'Not found',
     path: req.path,
-    code: 'NOT_FOUND',
+    method: req.method,
   });
 });
 
-// ============ UTILITY FUNCTIONS ============
-
-function formatUptime(seconds) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  
-  return `${hours}h ${minutes}m ${secs}s`;
-}
-
-// ============ CONNECTION TRACKING ============
-
-const connections = new Set();
-
-app.get('/api/connections', (req, res) => {
-  res.json({
-    active: connections.size,
-    max: CONFIG.maxConnections,
-    percentage: Math.round((connections.size / CONFIG.maxConnections) * 100),
+app.use((err, req, res, next) => {
+  logger.error(`Server error: ${err.message}`);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: err.message,
   });
 });
 
-// Track active connections
-const server = app.listen(PORT, HOST, () => {
-  logger.info(chalk.bold.cyan('╔════════════════════════════════════════╗'));
-  logger.info(chalk.bold.cyan('║     StudyHub v4 - Learning Platform    ║'));
-  logger.info(chalk.bold.cyan('║         Ultraviolet Proxy Active        ║'));
-  logger.info(chalk.bold.cyan('╚════════════════════════════════════════╝'));
-  logger.info(`Server running on ${chalk.yellow(`http://${HOST}:${PORT}`)}`);
-  logger.info(`Environment: ${chalk.cyan(CONFIG.environment)}`);
-  logger.info(`Max Connections: ${chalk.cyan(CONFIG.maxConnections)}`);
-  logger.info(`CORS: ${chalk.cyan(CONFIG.enableCors ? 'Enabled' : 'Disabled')}`);
-  logger.info('Press Ctrl+C to stop');
-});
+// ============================================================================
+// GRACEFUL SHUTDOWN
+// ============================================================================
 
-server.on('connection', (conn) => {
-  connections.add(conn);
-  app.set('activeConnections', connections.size);
-  
-  conn.on('close', () => {
-    connections.delete(conn);
-    app.set('activeConnections', connections.size);
+let connectionCount = 0;
+
+app.use((req, res, next) => {
+  connectionCount++;
+  res.on('finish', () => {
+    connectionCount--;
   });
+  next();
 });
-
-// ============ GRACEFUL SHUTDOWN ============
 
 process.on('SIGTERM', () => {
-  logger.warn('SIGTERM received, shutting down gracefully');
+  logger.warn('SIGTERM received, shutting down gracefully...');
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);
@@ -340,24 +340,35 @@ process.on('SIGTERM', () => {
   setTimeout(() => {
     logger.error('Forced shutdown');
     process.exit(1);
-  }, 10000);
+  }, 30000);
 });
 
 process.on('SIGINT', () => {
-  logger.warn('SIGINT received, shutting down');
+  logger.warn('SIGINT received, shutting down gracefully...');
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);
   });
 });
 
-process.on('uncaughtException', (error) => {
-  logger.error('Uncaught exception:', error.message);
-  process.exit(1);
+// ============================================================================
+// START SERVER
+// ============================================================================
+
+const server = app.listen(PORT, () => {
+  logger.info(`Server running on port ${PORT}`);
+  logger.info(`Access at http://localhost:${PORT}`);
+  logger.info(`Proxy service at http://localhost:${PORT}/uv/service`);
+  logger.info(`API docs at http://localhost:${PORT}/api/status`);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled rejection at:', promise, 'reason:', reason);
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    logger.error(`Port ${PORT} is already in use`);
+  } else {
+    logger.error(`Server error: ${err.message}`);
+  }
+  process.exit(1);
 });
 
 export default app;
