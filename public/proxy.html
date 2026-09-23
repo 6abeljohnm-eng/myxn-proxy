@@ -3,99 +3,406 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proxy - StudyHub</title>
-  <script src="/uv/uv.bundle.js"></script>
-  <script src="/uv/uv.config.js"></script>
-  <script>
-    // Initialize Ultraviolet
-    window.uvConfig = {
-      prefix: '/uv/',
-      codec: 'xor',
-      loglevel: 'debug',
-    };
-  </script>
+  <meta name="description" content="StudyHub Web Proxy">
+  <title>Web Proxy</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
-    }
-    
-    body {
+      background: #0f0a1a;
+      color: #f5f1ff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #050810;
     }
-    
-    iframe {
+
+    .proxy-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .proxy-header {
+      background: rgba(0, 0, 0, 0.6);
+      border-bottom: 1px solid rgba(183, 148, 246, 0.2);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .proxy-header h1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #b794f6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    .proxy-url-bar {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .proxy-url-input {
+      flex: 1;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(183, 148, 246, 0.2);
+      border-radius: 6px;
+      color: #f5f1ff;
+      font-size: 12px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .proxy-url-input:focus {
+      border-color: #b794f6;
+      box-shadow: 0 0 15px rgba(183, 148, 246, 0.2);
+    }
+
+    .proxy-go-btn {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #b794f6 0%, #c9a8ff 100%);
+      border: none;
+      border-radius: 6px;
+      color: #0f0a1a;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .proxy-go-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(183, 148, 246, 0.3);
+    }
+
+    .proxy-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #proxy-frame {
       width: 100%;
       height: 100%;
       border: none;
-      display: block;
+      background: white;
     }
-    
-    .loading {
-      position: fixed;
+
+    .proxy-error {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 40px;
+      color: #c9b8e0;
+    }
+
+    .proxy-error h2 {
+      font-size: 28px;
+      color: #b794f6;
+      margin-bottom: 12px;
+    }
+
+    .proxy-error p {
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .proxy-loading {
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      color: #00d9ff;
-      font-size: 14px;
       z-index: 1000;
     }
-    
+
     .spinner {
-      border: 3px solid rgba(0, 217, 255, 0.1);
-      border-top-color: #00d9ff;
+      border: 4px solid rgba(183, 148, 246, 0.2);
+      border-top-color: #b794f6;
       border-radius: 50%;
       width: 40px;
       height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 15px;
+      animation: rotate 1s linear infinite;
+      margin: 0 auto 20px;
     }
-    
-    @keyframes spin {
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
+    }
+
+    .proxy-nav-btn {
+      padding: 6px 12px;
+      background: rgba(183, 148, 246, 0.1);
+      border: 1px solid rgba(183, 148, 246, 0.3);
+      border-radius: 4px;
+      color: #b794f6;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .proxy-nav-btn:hover {
+      background: rgba(183, 148, 246, 0.2);
+      border-color: #b794f6;
+    }
+
+    .proxy-nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <div>Loading proxy...</div>
-  </div>
-  
-  <iframe id="proxy-frame"></iframe>
-  
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetUrl = urlParams.get('url');
+
+<div class="proxy-container">
+  <div class="proxy-header">
+    <button class="proxy-nav-btn" id="back-btn" title="Back">← Back</button>
+    <button class="proxy-nav-btn" id="forward-btn" title="Forward">Forward →</button>
+    <button class="proxy-nav-btn" id="reload-btn" title="Reload">⟳ Reload</button>
     
-    if (!targetUrl) {
-      document.body.innerHTML = '<div style="padding: 20px; color: #00d9ff; text-align: center;">No URL specified</div>';
-    } else {
-      try {
-        const proxyUrl = UV.rewrite(decodeURIComponent(targetUrl));
-        document.getElementById('proxy-frame').src = proxyUrl;
-        
-        document.getElementById('proxy-frame').onload = () => {
-          document.getElementById('loading').style.display = 'none';
-        };
-        
-        document.getElementById('proxy-frame').onerror = () => {
-          document.getElementById('loading').innerHTML = '<div style="color: #ff6b6b;">Failed to load proxy</div>';
-        };
-      } catch (error) {
-        console.error('Proxy error:', error);
-        document.getElementById('loading').innerHTML = '<div style="color: #ff6b6b;">Proxy error: ' + error.message + '</div>';
-      }
+    <div class="proxy-url-bar">
+      <span style="color: #9b8bb3;">🔒</span>
+      <input 
+        type="text" 
+        id="proxy-url" 
+        class="proxy-url-input" 
+        placeholder="Enter URL (https://example.com)"
+        spellcheck="false"
+      >
+      <button class="proxy-go-btn" id="go-btn">GO</button>
+    </div>
+  </div>
+
+  <div class="proxy-body">
+    <div id="proxy-loading" class="proxy-loading" style="display: none;">
+      <div class="spinner"></div>
+      <div>Loading...</div>
+    </div>
+    <iframe id="proxy-frame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"></iframe>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// PROXY CONFIG & INITIALIZATION
+// ============================================================================
+
+const UV_CONFIG = {
+  prefix: '/uv/',
+  bare: '/bare/',
+  encodeUrl: (url) => {
+    const urlObj = new URL(url);
+    return btoa(urlObj.href);
+  },
+  decodeUrl: (encoded) => {
+    try {
+      return atob(encoded);
+    } catch (e) {
+      return url;
     }
-  </script>
+  }
+};
+
+const proxyState = {
+  currentUrl: null,
+  history: [],
+  historyIndex: -1,
+};
+
+// ============================================================================
+// DOM ELEMENTS
+// ============================================================================
+
+const urlInput = document.getElementById('proxy-url');
+const goBtn = document.getElementById('go-btn');
+const backBtn = document.getElementById('back-btn');
+const forwardBtn = document.getElementById('forward-btn');
+const reloadBtn = document.getElementById('reload-btn');
+const frame = document.getElementById('proxy-frame');
+const loading = document.getElementById('proxy-loading');
+
+// ============================================================================
+// EVENT LISTENERS
+// ============================================================================
+
+goBtn.addEventListener('click', navigateToUrl);
+urlInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') navigateToUrl();
+});
+
+backBtn.addEventListener('click', () => {
+  if (proxyState.historyIndex > 0) {
+    proxyState.historyIndex--;
+    loadFromHistory();
+  }
+});
+
+forwardBtn.addEventListener('click', () => {
+  if (proxyState.historyIndex < proxyState.history.length - 1) {
+    proxyState.historyIndex++;
+    loadFromHistory();
+  }
+});
+
+reloadBtn.addEventListener('click', () => {
+  if (proxyState.currentUrl) {
+    loadProxy(proxyState.currentUrl);
+  }
+});
+
+frame.addEventListener('load', () => {
+  loading.style.display = 'none';
+  updateNavButtons();
+});
+
+frame.addEventListener('error', () => {
+  loading.style.display = 'none';
+  showError('Failed to load page');
+});
+
+// ============================================================================
+// NAVIGATION FUNCTIONS
+// ============================================================================
+
+function navigateToUrl() {
+  let url = urlInput.value.trim();
+  
+  if (!url) return;
+  
+  // Add protocol if missing
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url;
+  }
+  
+  // Validate URL
+  try {
+    new URL(url);
+  } catch (e) {
+    showError('Invalid URL');
+    return;
+  }
+  
+  loadProxy(url);
+}
+
+function loadProxy(url) {
+  proxyState.currentUrl = url;
+  
+  // Add to history
+  if (proxyState.historyIndex < proxyState.history.length - 1) {
+    proxyState.history = proxyState.history.slice(0, proxyState.historyIndex + 1);
+  }
+  proxyState.history.push(url);
+  proxyState.historyIndex = proxyState.history.length - 1;
+  
+  // Update UI
+  urlInput.value = url;
+  loading.style.display = 'flex';
+  updateNavButtons();
+  
+  // Construct proxy URL
+  const encodedUrl = UV_CONFIG.encodeUrl(url);
+  const proxyUrl = `${UV_CONFIG.prefix}service?url=${encodedUrl}`;
+  
+  // Load in iframe
+  frame.src = proxyUrl;
+}
+
+function loadFromHistory() {
+  const url = proxyState.history[proxyState.historyIndex];
+  if (url) {
+    urlInput.value = url;
+    proxyState.currentUrl = url;
+    loading.style.display = 'flex';
+    updateNavButtons();
+    
+    const encodedUrl = UV_CONFIG.encodeUrl(url);
+    const proxyUrl = `${UV_CONFIG.prefix}service?url=${encodedUrl}`;
+    frame.src = proxyUrl;
+  }
+}
+
+function updateNavButtons() {
+  backBtn.disabled = proxyState.historyIndex <= 0;
+  forwardBtn.disabled = proxyState.historyIndex >= proxyState.history.length - 1;
+}
+
+function showError(message) {
+  frame.srcdoc = `
+    <html>
+      <head>
+        <style>
+          body {
+            background: #0f0a1a;
+            color: #f5f1ff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+          }
+          .error {
+            text-align: center;
+          }
+          h1 {
+            color: #b794f6;
+            margin-bottom: 12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="error">
+          <h1>⚠️ Error</h1>
+          <p>${message}</p>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+window.addEventListener('load', () => {
+  // Set default homepage or game from query param
+  const params = new URLSearchParams(window.location.search);
+  const gameId = params.get('game');
+  
+  if (gameId) {
+    // Load game via proxy
+    const gameUrl = `https://www.example-game-host.com/games/${gameId}`;
+    urlInput.value = gameUrl;
+  }
+  
+  updateNavButtons();
+});
+
+console.log('Proxy system initialized');
+</script>
+
 </body>
 </html>
