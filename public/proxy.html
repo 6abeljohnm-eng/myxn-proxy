@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="StudyHub Web Proxy">
   <title>Web Proxy</title>
   <style>
     * {
@@ -12,397 +11,227 @@
       box-sizing: border-box;
     }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #0f0a1a;
-      color: #f5f1ff;
+    :root {
+      --primary: #b794f6;
+      --secondary: #10b981;
+      --accent: #d97706;
+      --bg-darkest: #0f0a1a;
+      --bg-dark: #1a1a2e;
+      --border-color: rgba(183, 148, 246, 0.2);
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+    }
+
+    body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-darkest);
+      color: var(--text-primary);
+      overflow: hidden;
     }
 
-    .proxy-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .proxy-header {
-      background: rgba(0, 0, 0, 0.6);
-      border-bottom: 1px solid rgba(183, 148, 246, 0.2);
-      padding: 12px 20px;
+    .navbar {
       display: flex;
       align-items: center;
       gap: 12px;
-      flex-shrink: 0;
-      backdrop-filter: blur(10px);
-      z-index: 100;
+      padding: 12px 20px;
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border-color);
+      height: 56px;
     }
 
-    .proxy-header h1 {
-      font-size: 14px;
-      font-weight: 700;
-      color: #b794f6;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 0;
-    }
-
-    .proxy-url-bar {
-      flex: 1;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .proxy-url-input {
-      flex: 1;
+    .nav-btn {
       padding: 8px 12px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(183, 148, 246, 0.2);
+      background: rgba(183, 148, 246, 0.1);
+      border: 1px solid var(--border-color);
       border-radius: 6px;
-      color: #f5f1ff;
-      font-size: 12px;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .proxy-url-input:focus {
-      border-color: #b794f6;
-      box-shadow: 0 0 15px rgba(183, 148, 246, 0.2);
-    }
-
-    .proxy-go-btn {
-      padding: 8px 16px;
-      background: linear-gradient(135deg, #b794f6 0%, #c9a8ff 100%);
-      border: none;
-      border-radius: 6px;
-      color: #0f0a1a;
-      font-weight: 700;
-      font-size: 11px;
+      color: var(--text-primary);
       cursor: pointer;
-      transition: all 0.2s;
+      font-size: 14px;
+      transition: all 0.3s;
     }
 
-    .proxy-go-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(183, 148, 246, 0.3);
+    .nav-btn:hover {
+      background: var(--primary);
+      color: var(--bg-darkest);
+      border-color: var(--primary);
     }
 
-    .proxy-body {
+    .url-bar {
       flex: 1;
       display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin: 0 12px;
     }
 
-    #proxy-frame {
+    .url-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      outline: none;
+      font-size: 14px;
+    }
+
+    .url-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .go-btn {
+      padding: 6px 12px;
+      background: var(--primary);
+      border: none;
+      border-radius: 4px;
+      color: var(--bg-darkest);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .go-btn:hover {
+      background: var(--secondary);
+    }
+
+    .iframe-container {
+      width: 100%;
+      height: calc(100vh - 56px);
+      border: none;
+    }
+
+    iframe {
       width: 100%;
       height: 100%;
       border: none;
-      background: white;
     }
 
-    .proxy-error {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 40px;
-      color: #c9b8e0;
-    }
-
-    .proxy-error h2 {
-      font-size: 28px;
-      color: #b794f6;
-      margin-bottom: 12px;
-    }
-
-    .proxy-error p {
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    .proxy-loading {
+    .loading {
+      display: none;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      z-index: 1000;
+      color: var(--text-secondary);
     }
 
-    .spinner {
-      border: 4px solid rgba(183, 148, 246, 0.2);
-      border-top-color: #b794f6;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: rotate 1s linear infinite;
-      margin: 0 auto 20px;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .proxy-nav-btn {
-      padding: 6px 12px;
-      background: rgba(183, 148, 246, 0.1);
-      border: 1px solid rgba(183, 148, 246, 0.3);
-      border-radius: 4px;
-      color: #b794f6;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .proxy-nav-btn:hover {
-      background: rgba(183, 148, 246, 0.2);
-      border-color: #b794f6;
-    }
-
-    .proxy-nav-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .loading.active {
+      display: block;
     }
   </style>
+
+  <script>
+    // Apply color theme from parent
+    const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+    if (settings.colorTheme) {
+      const themes = {
+        'Purple': ['#b794f6', '#10b981', '#d97706'],
+        'Cyan': ['#00d4ff', '#10b981', '#fbbf24'],
+        'Magenta': ['#ec4899', '#10b981', '#fbbf24'],
+        'Blue': ['#3b82f6', '#06b6d4', '#f59e0b'],
+        'Green': ['#10b981', '#06b6d4', '#f59e0b'],
+      };
+      const [primary, secondary, accent] = themes[settings.colorTheme] || themes['Purple'];
+      document.documentElement.style.setProperty('--primary', primary);
+      document.documentElement.style.setProperty('--secondary', secondary);
+      document.documentElement.style.setProperty('--accent', accent);
+    }
+  </script>
 </head>
 <body>
 
-<div class="proxy-container">
-  <div class="proxy-header">
-    <button class="proxy-nav-btn" id="back-btn" title="Back">← Back</button>
-    <button class="proxy-nav-btn" id="forward-btn" title="Forward">Forward →</button>
-    <button class="proxy-nav-btn" id="reload-btn" title="Reload">⟳ Reload</button>
+  <div class="navbar">
+    <button class="nav-btn" onclick="goBack()">← Back</button>
+    <button class="nav-btn" onclick="goForward()">Forward →</button>
+    <button class="nav-btn" onclick="reload()">⟲ Reload</button>
     
-    <div class="proxy-url-bar">
-      <span style="color: #9b8bb3;">🔒</span>
-      <input 
-        type="text" 
-        id="proxy-url" 
-        class="proxy-url-input" 
-        placeholder="Enter URL (https://example.com)"
-        spellcheck="false"
-      >
-      <button class="proxy-go-btn" id="go-btn">GO</button>
+    <div class="url-bar">
+      <span>🔒</span>
+      <input type="text" class="url-input" id="urlInput" placeholder="Enter URL...">
+      <button class="go-btn" onclick="navigate()">GO</button>
     </div>
   </div>
 
-  <div class="proxy-body">
-    <div id="proxy-loading" class="proxy-loading" style="display: none;">
-      <div class="spinner"></div>
-      <div>Loading...</div>
-    </div>
-    <iframe id="proxy-frame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"></iframe>
+  <div class="iframe-container">
+    <iframe id="proxyFrame"></iframe>
   </div>
-</div>
 
-<script>
-// ============================================================================
-// PROXY CONFIG & INITIALIZATION
-// ============================================================================
+  <div class="loading" id="loading">
+    <p>Loading...</p>
+  </div>
 
-const UV_CONFIG = {
-  prefix: '/uv/',
-  bare: '/bare/',
-  encodeUrl: (url) => {
-    const urlObj = new URL(url);
-    return btoa(urlObj.href);
-  },
-  decodeUrl: (encoded) => {
-    try {
-      return atob(encoded);
-    } catch (e) {
-      return url;
+  <script>
+    const proxyFrame = document.getElementById('proxyFrame');
+    const urlInput = document.getElementById('urlInput');
+    const loading = document.getElementById('loading');
+
+    // Get URL from query parameter
+    const params = new URLSearchParams(window.location.search);
+    const encodedUrl = params.get('url');
+
+    if (encodedUrl) {
+      try {
+        const decodedUrl = atob(encodedUrl);
+        loadProxyUrl(decodedUrl);
+        urlInput.value = decodedUrl;
+      } catch (e) {
+        console.error('Failed to decode URL:', e);
+        urlInput.placeholder = 'Invalid URL';
+      }
     }
-  }
-};
 
-const proxyState = {
-  currentUrl: null,
-  history: [],
-  historyIndex: -1,
-};
+    function loadProxyUrl(url) {
+      loading.classList.add('active');
+      
+      try {
+        const encoded = btoa(url);
+        proxyFrame.src = `/uv/service?url=${encoded}`;
+        
+        proxyFrame.onload = () => {
+          loading.classList.remove('active');
+        };
+        
+        setTimeout(() => {
+          loading.classList.remove('active');
+        }, 5000);
+      } catch (e) {
+        console.error('Proxy error:', e);
+        loading.classList.remove('active');
+      }
+    }
 
-// ============================================================================
-// DOM ELEMENTS
-// ============================================================================
+    function navigate() {
+      const url = urlInput.value.trim();
+      if (url) {
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          loadProxyUrl('https://' + url);
+        } else {
+          loadProxyUrl(url);
+        }
+      }
+    }
 
-const urlInput = document.getElementById('proxy-url');
-const goBtn = document.getElementById('go-btn');
-const backBtn = document.getElementById('back-btn');
-const forwardBtn = document.getElementById('forward-btn');
-const reloadBtn = document.getElementById('reload-btn');
-const frame = document.getElementById('proxy-frame');
-const loading = document.getElementById('proxy-loading');
+    function goBack() {
+      proxyFrame.contentWindow.history.back();
+    }
 
-// ============================================================================
-// EVENT LISTENERS
-// ============================================================================
+    function goForward() {
+      proxyFrame.contentWindow.history.forward();
+    }
 
-goBtn.addEventListener('click', navigateToUrl);
-urlInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') navigateToUrl();
-});
+    function reload() {
+      proxyFrame.src = proxyFrame.src;
+    }
 
-backBtn.addEventListener('click', () => {
-  if (proxyState.historyIndex > 0) {
-    proxyState.historyIndex--;
-    loadFromHistory();
-  }
-});
-
-forwardBtn.addEventListener('click', () => {
-  if (proxyState.historyIndex < proxyState.history.length - 1) {
-    proxyState.historyIndex++;
-    loadFromHistory();
-  }
-});
-
-reloadBtn.addEventListener('click', () => {
-  if (proxyState.currentUrl) {
-    loadProxy(proxyState.currentUrl);
-  }
-});
-
-frame.addEventListener('load', () => {
-  loading.style.display = 'none';
-  updateNavButtons();
-});
-
-frame.addEventListener('error', () => {
-  loading.style.display = 'none';
-  showError('Failed to load page');
-});
-
-// ============================================================================
-// NAVIGATION FUNCTIONS
-// ============================================================================
-
-function navigateToUrl() {
-  let url = urlInput.value.trim();
-  
-  if (!url) return;
-  
-  // Add protocol if missing
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url;
-  }
-  
-  // Validate URL
-  try {
-    new URL(url);
-  } catch (e) {
-    showError('Invalid URL');
-    return;
-  }
-  
-  loadProxy(url);
-}
-
-function loadProxy(url) {
-  proxyState.currentUrl = url;
-  
-  // Add to history
-  if (proxyState.historyIndex < proxyState.history.length - 1) {
-    proxyState.history = proxyState.history.slice(0, proxyState.historyIndex + 1);
-  }
-  proxyState.history.push(url);
-  proxyState.historyIndex = proxyState.history.length - 1;
-  
-  // Update UI
-  urlInput.value = url;
-  loading.style.display = 'flex';
-  updateNavButtons();
-  
-  // Construct proxy URL
-  const encodedUrl = UV_CONFIG.encodeUrl(url);
-  const proxyUrl = `${UV_CONFIG.prefix}service?url=${encodedUrl}`;
-  
-  // Load in iframe
-  frame.src = proxyUrl;
-}
-
-function loadFromHistory() {
-  const url = proxyState.history[proxyState.historyIndex];
-  if (url) {
-    urlInput.value = url;
-    proxyState.currentUrl = url;
-    loading.style.display = 'flex';
-    updateNavButtons();
-    
-    const encodedUrl = UV_CONFIG.encodeUrl(url);
-    const proxyUrl = `${UV_CONFIG.prefix}service?url=${encodedUrl}`;
-    frame.src = proxyUrl;
-  }
-}
-
-function updateNavButtons() {
-  backBtn.disabled = proxyState.historyIndex <= 0;
-  forwardBtn.disabled = proxyState.historyIndex >= proxyState.history.length - 1;
-}
-
-function showError(message) {
-  frame.srcdoc = `
-    <html>
-      <head>
-        <style>
-          body {
-            background: #0f0a1a;
-            color: #f5f1ff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-          }
-          .error {
-            text-align: center;
-          }
-          h1 {
-            color: #b794f6;
-            margin-bottom: 12px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="error">
-          <h1>⚠️ Error</h1>
-          <p>${message}</p>
-        </div>
-      </body>
-    </html>
-  `;
-}
-
-// ============================================================================
-// INITIALIZATION
-// ============================================================================
-
-window.addEventListener('load', () => {
-  // Set default homepage or game from query param
-  const params = new URLSearchParams(window.location.search);
-  const gameId = params.get('game');
-  
-  if (gameId) {
-    // Load game via proxy
-    const gameUrl = `https://www.example-game-host.com/games/${gameId}`;
-    urlInput.value = gameUrl;
-  }
-  
-  updateNavButtons();
-});
-
-console.log('Proxy system initialized');
-</script>
+    urlInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        navigate();
+      }
+    });
+  </script>
 
 </body>
 </html>
