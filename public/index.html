@@ -8,6 +8,7 @@
   <title>StudyHub - Learning Platform</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
@@ -217,5 +218,18 @@
   </div>
 
   <script src="app.js" defer></script>
+  
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => {
+          console.log('✓ Service Worker registered');
+        })
+        .catch((err) => {
+          console.error('✗ Service Worker registration failed:', err);
+        });
+    }
+  </script>
 </body>
 </html>
