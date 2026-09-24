@@ -1,219 +1,46 @@
 // ============ GAME LIBRARY - 250+ TITLES ============
 const GAMES_DATABASE = [
-  // Action & Adventure
-  { id: 'ages-of-conflict', name: 'Ages of Conflict', category: 'action', icon: '⚔️' },
-  { id: 'apotheon', name: 'Apotheon', category: 'action', icon: '🗡️' },
-  { id: 'black-hole-fishing', name: 'Black Hole Fishing', category: 'puzzle', icon: '🎣' },
-  { id: 'bonk-io', name: 'Bonk.io', category: 'action', icon: '💥' },
-  { id: 'call-of-duty-mw', name: 'Call Of Duty Modern Warfare', category: 'action', icon: '🎯' },
-  { id: 'cat-goes-fishing', name: 'Cat Goes Fishing', category: 'puzzle', icon: '🐱' },
-  { id: 'celeste-3d', name: 'Celeste 3D', category: 'action', icon: '⛰️' },
-  { id: 'cluster-truck', name: 'Cluster Truck', category: 'action', icon: '🚚' },
-  { id: 'crashout-crew', name: 'Crashout Crew', category: 'action', icon: '💢' },
-  { id: 'endacopia', name: 'Endacopia', category: 'strategy', icon: '🏛️' },
-  { id: 'endoparasitic', name: 'Endoparasitic', category: 'action', icon: '👾' },
-  { id: 'endoparasitic-2', name: 'Endoparasitic 2', category: 'action', icon: '👾' },
-  { id: 'goober-dash', name: 'Goober Dash', category: 'action', icon: '🏃' },
-  { id: 'how-to-fish', name: 'How To Fish', category: 'puzzle', icon: '🎣' },
-  { id: 'into-space-1', name: 'Into Space 1', category: 'action', icon: '🚀' },
-  { id: 'into-space-2', name: 'Into Space 2', category: 'action', icon: '🚀' },
-  { id: 'into-space-3', name: 'Into Space 3', category: 'action', icon: '🚀' },
-  { id: 'i-wanna-be-guy', name: 'I Wanna Be The Guy', category: 'action', icon: '😤' },
-  { id: 'knife-hit', name: 'Knife Hit', category: 'action', icon: '🔪' },
-  { id: 'la-madriguera', name: 'La Madriguera', category: 'adventure', icon: '🕳️' },
-  { id: 'lethal-company', name: 'Lethal Company', category: 'action', icon: '🏭' },
-  { id: 'lethal-ape', name: 'Lethal Ape', category: 'action', icon: '🦍' },
-  { id: 'lolbeans-io', name: 'Lolbeans.io', category: 'action', icon: '🫘' },
-  { id: 'machine-party', name: 'Machine Party', category: 'action', icon: '🤖' },
-  { id: 'mindustry', name: 'Mindustry', category: 'strategy', icon: '⚙️' },
-  { id: 'my-talking-baby-hippo', name: 'My Talking Baby Hippo', category: 'casual', icon: '🦛' },
-  { id: 'peak', name: 'PEAK', category: 'puzzle', icon: '🏔️' },
-  { id: 'portal-2', name: 'Portal 2', category: 'puzzle', icon: '🚪' },
-  { id: 'rimworld', name: 'Rimworld', category: 'strategy', icon: '🌍' },
-  { id: 'scp-secret-lab', name: 'SCP: Secret Laboratory', category: 'action', icon: '🔬' },
-  { id: 'shrimp-io', name: 'Shrimp.io', category: 'action', icon: '🦐' },
-  { id: 'skribbl-io', name: 'Skribbl.io', category: 'casual', icon: '🎨' },
-  { id: 'binding-isaac-repentance', name: 'The Binding Of Isaac: Repentance', category: 'action', icon: '💔' },
-  { id: 'totally-accurate-battle-sim', name: 'Totally Accurate Battle Simulator', category: 'action', icon: '🎭' },
-  { id: 'webdashers', name: 'Webdashers', category: 'action', icon: '💨' },
-  { id: 'windowkill', name: 'Windowkill', category: 'action', icon: '🪟' },
-  { id: 'worldbox', name: 'Worldbox', category: 'strategy', icon: '🌎' },
-  { id: 'worlds-hardest-game-4', name: 'Worlds Hardest Game 4', category: 'action', icon: '😡' },
-  { id: 'protozoa', name: 'Protozoa', category: 'action', icon: '🔬' },
-  { id: '60-seconds', name: '60 Seconds!', category: 'action', icon: '⏱️' },
+  { id: 'ages-of-conflict', name: 'Ages of Conflict', category: 'action', icon: '⚔️', url: 'https://www.crazygames.com/game/ages-of-conflict' },
+  { id: 'bonk-io', name: 'Bonk.io', category: 'action', icon: '💥', url: 'https://bonk.io' },
+  { id: 'chess-com', name: 'Chess.com', category: 'strategy', icon: '♟️', url: 'https://chess.com' },
+  { id: 'cluster-truck', name: 'Cluster Truck', category: 'action', icon: '🚚', url: 'https://www.crazygames.com/game/cluster-truck' },
+  { id: 'geoguessr', name: 'Geoguessr', category: 'puzzle', icon: '🗺️', url: 'https://geoguessr.com' },
+  { id: 'lolbeans-io', name: 'Lolbeans.io', category: 'action', icon: '🫘', url: 'https://lolbeans.io' },
+  { id: 'mindustry', name: 'Mindustry', category: 'strategy', icon: '⚙️', url: 'https://mindustrygame.github.io' },
+  { id: 'portal-2', name: 'Portal 2', category: 'puzzle', icon: '🚪', url: 'https://www.crazygames.com/game/portal-2' },
+  { id: 'rimworld', name: 'Rimworld', category: 'strategy', icon: '🌍', url: 'https://rimworldgame.com' },
+  { id: 'skribbl-io', name: 'Skribbl.io', category: 'casual', icon: '🎨', url: 'https://skribbl.io' },
+  { id: 'super-tux-kart', name: 'Super Tux Kart', category: 'racing', icon: '🐧', url: 'https://supertuxkart.net' },
+  { id: 'worldbox', name: 'Worldbox', category: 'strategy', icon: '🌎', url: 'https://www.worldbox.io' },
+];
 
-  // Games 40-80
-  { id: 'achievement-unlocked-2', name: 'Achievement Unlocked 2', category: 'casual', icon: '🏆' },
-  { id: 'achievement-unlocked-3', name: 'Achievement Unlocked 3', category: 'casual', icon: '🏆' },
-  { id: 'alien-hominid', name: 'Alien Hominid', category: 'action', icon: '👽' },
-  { id: 'angry-birds-2', name: 'Angry Birds 2', category: 'puzzle', icon: '🐦' },
-  { id: 'anton-blast-64', name: 'Anton Blast 64', category: 'action', icon: '💥' },
-  { id: 'balatro-modded', name: 'Balatro Modded', category: 'strategy', icon: '🎰' },
-  { id: 'big-tower-tiny-square', name: 'Big Tower Tiny Square', category: 'action', icon: '📦' },
-  { id: 'bloons-td-towers-2-cloud', name: 'Bloons TD Towers 2 (Cloud)', category: 'strategy', icon: '🎈' },
-  { id: 'call-of-duty-mobile-cloud', name: 'Call of Duty Mobile (Cloud)', category: 'action', icon: '📱' },
-  { id: 'celeste-64', name: 'Celeste 64', category: 'action', icon: '⛰️' },
-  { id: 'chess-com', name: 'Chess.com', category: 'strategy', icon: '♟️' },
-  { id: 'cookie-run-kingdom-cloud', name: 'Cookie Run Kingdom (Cloud)', category: 'casual', icon: '🍪' },
-  { id: 'dewdrop-dynasty', name: 'Dewdrop Dynasty', category: 'strategy', icon: '💧' },
-  { id: 'dont-bite-me-bro', name: "Don't Bite me Bro!", category: 'casual', icon: '🧛' },
-  { id: 'emily-is-away', name: 'Emily Is Away', category: 'casual', icon: '💻' },
-  { id: 'genshin-impact-cloud', name: 'Genshin Impact (Cloud)', category: 'action', icon: '⛩️' },
-  { id: 'geoguessr', name: 'Geoguessr', category: 'puzzle', icon: '🗺️' },
-  { id: 'gamble-with-friends', name: 'Gamble With Your Friends', category: 'casual', icon: '🎲' },
-  { id: 'honkai-star-rail-cloud', name: 'Honkai: Star Rail (Cloud)', category: 'action', icon: '⭐' },
-  { id: 'madness-accelerant', name: 'Madness Accelerant', category: 'action', icon: '⚡' },
-  { id: 'madness-ambulation', name: 'Madness Ambulation', category: 'action', icon: '🚶' },
-  { id: 'madness-combat-defence', name: 'Madness Combat Defence', category: 'action', icon: '🛡️' },
-  { id: 'madness-combat-fps', name: 'Madness Combat FPS Fueled By Hotdogs', category: 'action', icon: '🌭' },
-  { id: 'madness-gemini', name: 'Madness Gemini', category: 'action', icon: '👯' },
-  { id: 'madness-hydraulic', name: 'Madness Hydraulic', category: 'action', icon: '💪' },
-  { id: 'madness-interactive', name: 'Madness Interactive', category: 'action', icon: '🎮' },
-  { id: 'madness-off-color', name: 'Madness Off Color', category: 'action', icon: '🎨' },
-  { id: 'madness-premeditation', name: 'Madness Premeditation', category: 'action', icon: '🤔' },
-  { id: 'madness-project-nexus', name: 'Madness Project Nexus', category: 'action', icon: '🔗' },
-  { id: 'madness-retaliation', name: 'Madness Retaliation', category: 'action', icon: '💥' },
-  { id: 'madden-nfl-mobile-cloud', name: 'Madden NFL Mobile (Cloud)', category: 'sports', icon: '🏈' },
-  { id: 'monster-tracks', name: 'Monster Tracks', category: 'action', icon: '👹' },
-  { id: 'my-singing-monsters-cloud', name: 'My Singing Monsters (Cloud)', category: 'casual', icon: '🎵' },
-  { id: 'wispcraft-minecraft', name: 'Wispcraft (Minecraft)', category: 'strategy', icon: '⛏️' },
-  { id: 'pizzatron-3000', name: 'Pizzatron 3000', category: 'casual', icon: '🍕' },
-  { id: 'poppy-playtime-cloud', name: 'Poppy Playtime (Cloud)', category: 'horror', icon: '🧸' },
-  { id: 'potion-craft-alchemy', name: 'Potion Craft Alchemy Simulator', category: 'strategy', icon: '🧪' },
-  { id: 'prodigy', name: 'Prodigy', category: 'rpg', icon: '✨' },
-  { id: 'pubg-mobile-cloud', name: 'PUBG Mobile (Cloud)', category: 'action', icon: '🎯' },
+const APPS_DATABASE = [
+  { id: 'geforce-now', name: 'Geforce NOW', category: 'gaming', icon: '🎮', url: 'https://play.geforcenow.com' },
+  { id: 'android-emulator', name: 'Android Emulator', category: 'emulator', icon: '📱', url: 'https://www.emulator.online/' },
+  { id: 'chrome', name: 'Chrome', category: 'browser', icon: '🌐', url: 'https://google.com' },
+  { id: 'firefox', name: 'Firefox', category: 'browser', icon: '🔥', url: 'https://firefox.com' },
+  { id: 'spotify', name: 'Spotify', category: 'media', icon: '🎵', url: 'https://spotify.com' },
+  { id: 'youtube', name: 'YouTube', category: 'media', icon: '📺', url: 'https://youtube.com' },
+  { id: 'reddit', name: 'Reddit', category: 'social', icon: '🤖', url: 'https://reddit.com' },
+  { id: 'discord', name: 'Discord', category: 'social', icon: '💬', url: 'https://discord.com' },
+];
 
-  // Games 80-120
-  { id: 'rabbids-alive-kicking', name: 'Rabbids Alive and Kicking', category: 'casual', icon: '🐰' },
-  { id: 'rabbids-travel-time', name: 'Rabbids Travel In Time', category: 'action', icon: '⏰' },
-  { id: 'rocket-league-sideswipe-cloud', name: 'Rocket League Sideswipe (Cloud)', category: 'sports', icon: '🚗' },
-  { id: 'roblox-cloud', name: 'Roblox (Cloud)', category: 'mmo', icon: '🎲' },
-  { id: 'rhythm-hell', name: 'Rhythm Hell', category: 'casual', icon: '🎵' },
-  { id: 'scary-teacher-3d', name: 'Scary Teacher 3D', category: 'horror', icon: '👨‍🏫' },
-  { id: 'stumble-guys-cloud', name: 'Stumble Guys (Cloud)', category: 'casual', icon: '🤸' },
-  { id: 'super-tux-kart', name: 'Super Tux Kart', category: 'racing', icon: '🐧' },
-  { id: 'the-impossible-quiz-2', name: 'The Impossible Quiz 2', category: 'puzzle', icon: '❓' },
-  { id: 'the-sims-mobile-cloud', name: 'The Sims Mobile (Cloud)', category: 'simulation', icon: '🏠' },
-  { id: 'toss-the-turtle', name: 'Toss The Turtle', category: 'casual', icon: '🐢' },
-  { id: 'trombone-champ', name: 'Trombone Champ', category: 'casual', icon: '🎺' },
-  { id: 'venge-io-cloud', name: 'Venge.io (Cloud)', category: 'action', icon: '⚔️' },
-  { id: 'zombs-royale-cloud', name: 'Zombs Royale (Cloud)', category: 'action', icon: '🧟' },
-  { id: 'zuma', name: 'Zuma', category: 'puzzle', icon: '⚪' },
+const BACKGROUND_PRESETS = [
+  { name: 'Deep Space', value: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%)' },
+  { name: 'Ocean Blue', value: 'linear-gradient(135deg, #001a4d 0%, #003d99 100%)' },
+  { name: 'Forest Green', value: 'linear-gradient(135deg, #0d3a0d 0%, #1a6b1a 100%)' },
+  { name: 'Sunset', value: 'linear-gradient(135deg, #4a0e4e 0%, #8b2e00 100%)' },
+  { name: 'Neon Cyan', value: 'linear-gradient(135deg, #0a3d62 0%, #00d4ff 100%)' },
+  { name: 'Dark Purple', value: 'linear-gradient(135deg, #1a0033 0%, #4d0099 100%)' },
+  { name: 'Midnight', value: '#0f0a1a' },
+];
 
-  // Classics & Arcade
-  { id: 'minecraft', name: 'Minecraft', category: 'strategy', icon: '⛏️' },
-  { id: 'fortnite', name: 'Fortnite', category: 'action', icon: '🎮' },
-  { id: 'among-us', name: 'Among Us', category: 'casual', icon: '👽' },
-  { id: 'chess', name: 'Chess', category: 'strategy', icon: '♟️' },
-  { id: 'checkers', name: 'Checkers', category: 'strategy', icon: '🔴' },
-  { id: '2048', name: '2048', category: 'puzzle', icon: '2️⃣' },
-  { id: 'tetris', name: 'Tetris', category: 'puzzle', icon: '⬜' },
-  { id: 'snake', name: 'Snake', category: 'casual', icon: '🐍' },
-  { id: 'pac-man', name: 'Pac-Man', category: 'casual', icon: '👾' },
-  { id: 'geometry-dash', name: 'Geometry Dash', category: 'action', icon: '📐' },
-  { id: 'krunker-io', name: 'Krunker.io', category: 'action', icon: '🎯' },
-  { id: 'agar-io', name: 'Agar.io', category: 'casual', icon: '🔵' },
-  { id: 'slither-io', name: 'Slither.io', category: 'casual', icon: '🐛' },
-  { id: 'wordle', name: 'Wordle', category: 'puzzle', icon: '📝' },
-
-  // IO Games
-  { id: 'surviv-io', name: 'Surviv.io', category: 'action', icon: '🎮' },
-  { id: 'diep-io', name: 'Diep.io', category: 'action', icon: '🎯' },
-  { id: 'hole-io', name: 'Hole.io', category: 'casual', icon: '🕳️' },
-  { id: 'paper-io-2', name: 'Paper.io 2', category: 'casual', icon: '📄' },
-  { id: 'curve-fever', name: 'Curve Fever', category: 'casual', icon: '➰' },
-  { id: 'splix-io', name: 'Splix.io', category: 'casual', icon: '🟫' },
-  { id: 'defly-io', name: 'Defly.io', category: 'action', icon: '🪁' },
-  { id: 'cutthroat-caverns', name: 'Cutthroat Caverns', category: 'strategy', icon: '⚔️' },
-
-  // Multiplayer & Competitive
-  { id: 'shell-shockers', name: 'Shell Shockers', category: 'action', icon: '🥚' },
-  { id: 'town-of-salem', name: 'Town of Salem', category: 'strategy', icon: '🏘️' },
-  { id: 'gartic-phone', name: 'Gartic Phone', category: 'casual', icon: '📞' },
-  { id: 'uno', name: 'UNO', category: 'casual', icon: '🃏' },
-  { id: 'sporcle', name: 'Sporcle', category: 'puzzle', icon: '🧩' },
-
-  // Sports & Racing
-  { id: 'slope', name: 'Slope', category: 'action', icon: '⛷️' },
-  { id: 'drift-boss', name: 'Drift Boss', category: 'racing', icon: '🏎️' },
-  { id: 'happy-wheels', name: 'Happy Wheels', category: 'action', icon: '🚲' },
-  { id: 'hill-climb-racing', name: 'Hill Climb Racing', category: 'racing', icon: '🏔️' },
-  { id: 'moto-x3m', name: 'Moto X3M', category: 'racing', icon: '🏍️' },
-  { id: 'fireboy-watergirl', name: 'Fireboy & Watergirl', category: 'puzzle', icon: '🔥' },
-  { id: 'vex', name: 'Vex', category: 'action', icon: '🕹️' },
-  { id: 'vex-2', name: 'Vex 2', category: 'action', icon: '🕹️' },
-  { id: 'vex-3', name: 'Vex 3', category: 'action', icon: '🕹️' },
-  { id: 'vex-4', name: 'Vex 4', category: 'action', icon: '🕹️' },
-  { id: 'vex-5', name: 'Vex 5', category: 'action', icon: '🕹️' },
-  { id: 'vex-6', name: 'Vex 6', category: 'action', icon: '🕹️' },
-
-  // Puzzle & Brain
-  { id: 'cut-the-rope', name: 'Cut The Rope', category: 'puzzle', icon: '🪢' },
-  { id: 'bubble-shooter', name: 'Bubble Shooter', category: 'puzzle', icon: '🫧' },
-  { id: 'match-3-games', name: 'Match 3 Games', category: 'puzzle', icon: '💎' },
-  { id: 'soduku', name: 'Sudoku', category: 'puzzle', icon: '🔢' },
-  { id: 'crossword-puzzle', name: 'Crossword Puzzle', category: 'puzzle', icon: '📋' },
-  { id: 'picross', name: 'Picross', category: 'puzzle', icon: '📊' },
-  { id: 'minesweeper', name: 'Minesweeper', category: 'puzzle', icon: '💣' },
-
-  // Platformer & Adventure
-  { id: 'super-mario-bros', name: 'Super Mario Bros', category: 'platformer', icon: '🍄' },
-  { id: 'mega-man', name: 'Mega Man', category: 'action', icon: '🤖' },
-  { id: 'metroid', name: 'Metroid', category: 'action', icon: '🔫' },
-  { id: 'sonic-adventure', name: 'Sonic Adventure', category: 'action', icon: '🦔' },
-  { id: 'kirby-super-star', name: 'Kirby Super Star', category: 'platformer', icon: '💗' },
-  { id: 'donkey-kong', name: 'Donkey Kong', category: 'action', icon: '🦍' },
-  { id: 'legend-of-zelda', name: 'Legend of Zelda', category: 'adventure', icon: '🗡️' },
-  { id: 'cave-story', name: 'Cave Story', category: 'adventure', icon: '⛰️' },
-  { id: 'hollow-knight', name: 'Hollow Knight', category: 'action', icon: '⚔️' },
-
-  // RPG & Fantasy
-  { id: 'undertale', name: 'Undertale', category: 'rpg', icon: '💛' },
-  { id: 'deltarune', name: 'Deltarune', category: 'rpg', icon: '♠️' },
-  { id: 'final-fantasy-7', name: 'Final Fantasy 7', category: 'rpg', icon: '⚔️' },
-  { id: 'chrono-trigger', name: 'Chrono Trigger', category: 'rpg', icon: '⏰' },
-  { id: 'earthbound', name: 'Earthbound', category: 'rpg', icon: '👽' },
-  { id: 'diablo', name: 'Diablo', category: 'action-rpg', icon: '😈' },
-  { id: 'dark-souls', name: 'Dark Souls', category: 'action-rpg', icon: '💀' },
-  { id: 'elder-scrolls', name: 'Elder Scrolls', category: 'rpg', icon: '🗺️' },
-  { id: 'torchlight', name: 'Torchlight', category: 'action-rpg', icon: '🔦' },
-
-  // Real Apps
-  { id: 'facebook', name: 'Facebook', category: 'app', icon: 'f' },
-  { id: 'whatsapp', name: 'WhatsApp', category: 'app', icon: '💬' },
-  { id: 'twitter', name: 'Twitter', category: 'app', icon: '𝕏' },
-  { id: 'wikipedia', name: 'Wikipedia', category: 'app', icon: 'W' },
-  { id: 'reddit', name: 'Reddit', category: 'app', icon: '🤖' },
-  { id: 'chatgpt', name: 'ChatGPT', category: 'app', icon: '💭' },
-  { id: 'netflix', name: 'Netflix', category: 'app', icon: '🎬' },
-  { id: 'telegram', name: 'Telegram', category: 'app', icon: '✈️' },
-  { id: 'spotify', name: 'Spotify', category: 'app', icon: '🎵' },
-  { id: 'ebay', name: 'eBay', category: 'app', icon: '💳' },
-  { id: 'disney-plus', name: 'Disney Plus', category: 'app', icon: '🏰' },
-  { id: 'hulu', name: 'Hulu', category: 'app', icon: '📺' },
-  { id: 'claude', name: 'Claude AI', category: 'app', icon: '🤖' },
-  { id: 'crunchyroll', name: 'Crunchyroll', category: 'app', icon: '🎌' },
-  { id: 'paramount', name: 'Paramount+', category: 'app', icon: '📺' },
-  { id: 'espn', name: 'ESPN', category: 'app', icon: '🏆' },
-  { id: 'peacock', name: 'Peacock', category: 'app', icon: '🦚' },
-  { id: 'vs-code', name: 'VS Code', category: 'app', icon: '</>' },
-  { id: 'fandom', name: 'Fandom', category: 'app', icon: '📚' },
-  { id: 'crazy-games', name: 'Crazy Games', category: 'app', icon: '🎮' },
-  { id: 'webtoon', name: 'Webtoon', category: 'app', icon: '📖' },
-  { id: 'itch', name: 'Itch.io', category: 'app', icon: '🎮' },
-  { id: 'ao3', name: 'AO3', category: 'app', icon: '📝' },
-  { id: 'newgrounds', name: 'Newgrounds', category: 'app', icon: '🎨' },
-  { id: 'geforce-now', name: 'GeForce NOW', category: 'app', icon: '☁️' },
-  { id: 'fmhy', name: 'FMHY', category: 'app', icon: '🌐' },
-  { id: 'bandlab', name: 'BandLab', category: 'app', icon: '🎸' },
-  { id: 'gofile', name: 'Gofile', category: 'app', icon: '📁' },
-  { id: 'homestuck', name: 'Homestuck', category: 'app', icon: '♠️' },
-  { id: 'vim', name: 'Vim', category: 'app', icon: '⌨️' },
-  { id: 'dolphin-emu', name: 'Dolphin EMU', category: 'app', icon: '🐬' },
-  { id: 'krita', name: 'Krita', category: 'app', icon: '🎨' },
-  { id: 'blender', name: 'Blender', category: 'app', icon: '🔷' },
-  { id: 'firefox', name: 'Firefox', category: 'app', icon: '🦊' },
-  { id: 'vita-3k-emu', name: 'Vita 3K EMU', category: 'app', icon: 'PSV' },
+const COLOR_THEMES = [
+  { name: 'Purple', primary: '#b794f6', secondary: '#10b981', accent: '#d97706' },
+  { name: 'Cyan', primary: '#00d4ff', secondary: '#10b981', accent: '#fbbf24' },
+  { name: 'Magenta', primary: '#ec4899', secondary: '#10b981', accent: '#fbbf24' },
+  { name: 'Blue', primary: '#3b82f6', secondary: '#06b6d4', accent: '#f59e0b' },
+  { name: 'Green', primary: '#10b981', secondary: '#06b6d4', accent: '#f59e0b' },
 ];
 
 // ============ STATE MANAGEMENT ============
@@ -223,13 +50,59 @@ const appState = {
   windows: [],
   taskbarApps: {},
   gameFilters: 'all',
+  proxyType: 'scramjet-v2',
+  settings: {
+    theme: 'dark',
+    notifications: true,
+    autoSave: true,
+    colorTheme: 'Purple',
+    background: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%)',
+    customBgUrl: '',
+  },
 };
+
+function loadSettings() {
+  const saved = localStorage.getItem('studyhubSettings');
+  if (saved) {
+    appState.settings = JSON.parse(saved);
+    applyTheme();
+    applyBackground();
+  }
+}
+
+function saveSettings() {
+  localStorage.setItem('studyhubSettings', JSON.stringify(appState.settings));
+}
+
+function applyTheme() {
+  const theme = COLOR_THEMES.find(t => t.name === appState.settings.colorTheme);
+  if (theme) {
+    document.documentElement.style.setProperty('--primary', theme.primary);
+    document.documentElement.style.setProperty('--secondary', theme.secondary);
+    document.documentElement.style.setProperty('--accent', theme.accent);
+  }
+}
+
+function applyBackground() {
+  const osScreen = document.getElementById('os-screen');
+  if (osScreen) {
+    if (appState.settings.customBgUrl) {
+      osScreen.style.backgroundImage = `url('${appState.settings.customBgUrl}')`;
+      osScreen.style.backgroundSize = 'cover';
+      osScreen.style.backgroundPosition = 'center';
+    } else {
+      osScreen.style.background = appState.settings.background;
+      osScreen.style.backgroundImage = 'none';
+    }
+  }
+}
 
 // ============ PASSWORD CHECK ============
 const CORRECT_PASSWORD = 'unblock';
 
 // ============ INITIALIZE APP ============
 document.addEventListener('DOMContentLoaded', () => {
+  loadSettings();
   initializeApp();
   startClockUpdate();
 });
@@ -281,6 +154,7 @@ function attachModeListeners() {
       const mode = card.dataset.mode;
       if (mode === 'os') {
         transitionToScreen('os');
+        applyBackground();
       } else if (mode === 'games') {
         transitionToScreen('games');
         populateGamesGrid();
@@ -291,7 +165,6 @@ function attachModeListeners() {
 
 // ============ OS LOGIC ============
 function attachOSListeners() {
-  // Menu items
   const menuItems = document.querySelectorAll('.menu-item');
   menuItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -300,7 +173,6 @@ function attachOSListeners() {
     });
   });
 
-  // Logout
   const logoutBtn = document.getElementById('logout-btn');
   logoutBtn.addEventListener('click', () => {
     transitionToScreen('login');
@@ -308,7 +180,6 @@ function attachOSListeners() {
     updateTaskbar();
   });
 
-  // Clock
   updateClock();
 }
 
@@ -319,7 +190,6 @@ function openWindow(type) {
   windowEl.className = 'window active';
   windowEl.id = windowId;
 
-  // Window header
   const header = document.createElement('div');
   header.className = 'window-header';
   
@@ -367,7 +237,6 @@ function openWindow(type) {
   header.appendChild(titleEl);
   header.appendChild(controls);
 
-  // Window content
   const content = document.createElement('div');
   content.className = 'window-content';
   content.innerHTML = getWindowContent(type);
@@ -375,10 +244,8 @@ function openWindow(type) {
   windowEl.appendChild(header);
   windowEl.appendChild(content);
 
-  // Make draggable
   makeDraggable(windowEl, header);
 
-  // Random position
   const minX = 280;
   const maxX = window.innerWidth - 500;
   const minY = 56;
@@ -394,6 +261,12 @@ function openWindow(type) {
   appState.windows.push({ id: windowId, type });
   updateTaskbar();
   updateEmptyState();
+
+  if (type === 'settings') {
+    attachSettingsListeners(windowEl);
+  } else if (type === 'apps') {
+    attachAppsListeners(windowEl);
+  }
 }
 
 function makeDraggable(element, handle) {
@@ -442,6 +315,18 @@ function getWindowTitle(type) {
 }
 
 function getWindowContent(type) {
+  const proxyOptions = `
+    <label style="display: block; margin-bottom: 10px;">
+      <input type="radio" name="proxy" value="uv" ${appState.proxyType === 'uv' ? 'checked' : ''} onchange="appState.proxyType='uv'; saveSettings();"> UV
+    </label>
+    <label style="display: block; margin-bottom: 10px;">
+      <input type="radio" name="proxy" value="scramjet-v2" ${appState.proxyType === 'scramjet-v2' ? 'checked' : ''} onchange="appState.proxyType='scramjet-v2'; saveSettings();"> Scramjet v2 (Default)
+    </label>
+    <label style="display: block;">
+      <input type="radio" name="proxy" value="scramjet-v1" ${appState.proxyType === 'scramjet-v1' ? 'checked' : ''} onchange="appState.proxyType='scramjet-v1'; saveSettings();"> Scramjet v1
+    </label>
+  `;
+
   const contents = {
     browser: `<div style="padding: 20px; text-align: center;">
       <div style="font-size: 48px; margin-bottom: 20px;">🌐</div>
@@ -453,8 +338,7 @@ function getWindowContent(type) {
     movies: `<div style="padding: 20px; text-align: center;">
       <div style="font-size: 48px; margin-bottom: 20px;">🎬</div>
       <h3 style="margin-bottom: 20px; color: var(--primary);">Movie Streaming</h3>
-      <p style="color: var(--text-secondary); margin-bottom: 15px;">Popular streaming sites at your fingertips</p>
-      <button style="width: 100%; padding: 8px; background: var(--secondary); color: var(--bg-darkest); border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Browse Movies</button>
+      <p style="color: var(--text-secondary); margin-bottom: 15px;">Use the browser proxy to access streaming sites</p>
     </div>`,
     
     games: `<div style="padding: 20px; text-align: center;">
@@ -499,30 +383,171 @@ function getWindowContent(type) {
       <input type="text" placeholder="Command..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary); font-family: monospace;">
     </div>`,
     
-    apps: `<div style="padding: 20px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">📱</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">App Store</h3>
-      <p style="color: var(--text-secondary); margin-bottom: 20px;">Install applications and tools</p>
-      <button style="width: 100%; padding: 8px; background: var(--primary); color: var(--bg-darkest); border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Browse Apps</button>
+    apps: `<div style="padding: 20px;">
+      <h3 style="margin-bottom: 20px; color: var(--primary);">📱 App Store</h3>
+      <div id="apps-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 300px; overflow-y: auto;">
+      </div>
     </div>`,
     
-    settings: `<div style="padding: 20px;">
-      <div style="font-size: 48px; text-align: center; margin-bottom: 20px;">⚙️</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">Settings</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-          <input type="checkbox" checked style="cursor: pointer;"> Dark Mode
+    settings: `<div style="padding: 20px; max-height: 400px; overflow-y: auto;">
+      <h3 style="margin-bottom: 20px; color: var(--primary);">⚙️ Settings & Preferences</h3>
+      
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Proxy Selection</h4>
+        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px;">
+          ${proxyOptions}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Color Theme</h4>
+        <div id="theme-selector" style="display: flex; gap: 8px; flex-wrap: wrap;">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Custom Color</h4>
+        <input type="color" id="custom-color" value="#b794f6" style="cursor: pointer; width: 60px; height: 40px; border: 1px solid var(--border-color); border-radius: 6px;">
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Background</h4>
+        <div id="bg-presets" style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Custom Background URL</h4>
+        <input type="text" id="custom-bg-url" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary); margin-bottom: 10px;">
+        <button id="apply-bg-btn" style="width: 100%; padding: 8px; background: var(--primary); color: var(--bg-darkest); border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Apply Background</button>
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Display Preferences</h4>
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 10px;">
+          <input type="checkbox" id="theme-toggle" ${appState.settings.theme === 'dark' ? 'checked' : ''} style="cursor: pointer;"> Dark Mode
         </label>
+      </div>
+
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--secondary); margin-bottom: 10px;">Notifications</h4>
         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-          <input type="checkbox" checked style="cursor: pointer;"> Notifications
-        </label>
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-          <input type="checkbox" checked style="cursor: pointer;"> Auto-save
+          <input type="checkbox" id="notif-toggle" ${appState.settings.notifications ? 'checked' : ''} style="cursor: pointer;"> Enable Notifications
         </label>
       </div>
     </div>`,
   };
   return contents[type] || '<div>Window content</div>';
+}
+
+function attachSettingsListeners(windowEl) {
+  const themeToggle = windowEl.querySelector('#theme-toggle');
+  const notifToggle = windowEl.querySelector('#notif-toggle');
+  const customColorInput = windowEl.querySelector('#custom-color');
+  const customBgInput = windowEl.querySelector('#custom-bg-url');
+  const applyBgBtn = windowEl.querySelector('#apply-bg-btn');
+  const themeSelector = windowEl.querySelector('#theme-selector');
+  const bgPresets = windowEl.querySelector('#bg-presets');
+
+  if (themeToggle) {
+    themeToggle.addEventListener('change', (e) => {
+      appState.settings.theme = e.target.checked ? 'dark' : 'light';
+      saveSettings();
+    });
+  }
+
+  if (notifToggle) {
+    notifToggle.addEventListener('change', (e) => {
+      appState.settings.notifications = e.target.checked;
+      saveSettings();
+    });
+  }
+
+  if (customColorInput) {
+    customColorInput.addEventListener('change', (e) => {
+      document.documentElement.style.setProperty('--primary', e.target.value);
+      appState.settings.colorTheme = 'Custom';
+      saveSettings();
+    });
+  }
+
+  if (applyBgBtn) {
+    applyBgBtn.addEventListener('click', () => {
+      const url = customBgInput.value.trim();
+      if (url) {
+        appState.settings.customBgUrl = url;
+        appState.settings.background = '';
+        saveSettings();
+        applyBackground();
+      }
+    });
+  }
+
+  // Populate theme selector
+  if (themeSelector) {
+    COLOR_THEMES.forEach(theme => {
+      const btn = document.createElement('button');
+      btn.style.cssText = `padding: 8px 12px; background: linear-gradient(90deg, ${theme.primary} 0%, ${theme.secondary} 100%); border: ${appState.settings.colorTheme === theme.name ? '2px solid white' : '1px solid rgba(255,255,255,0.3)'}; border-radius: 6px; cursor: pointer; color: white; font-weight: 600; font-size: 12px;`;
+      btn.textContent = theme.name;
+      btn.addEventListener('click', () => {
+        appState.settings.colorTheme = theme.name;
+        applyTheme();
+        saveSettings();
+        // Update button styles
+        document.querySelectorAll('#theme-selector button').forEach(b => {
+          b.style.border = '1px solid rgba(255,255,255,0.3)';
+        });
+        btn.style.border = '2px solid white';
+      });
+      themeSelector.appendChild(btn);
+    });
+  }
+
+  // Populate background presets
+  if (bgPresets) {
+    BACKGROUND_PRESETS.forEach(bg => {
+      const btn = document.createElement('button');
+      btn.style.cssText = `padding: 8px 12px; background: ${bg.value}; border: ${appState.settings.background === bg.value ? '2px solid white' : '1px solid rgba(255,255,255,0.3)'}; border-radius: 6px; cursor: pointer; color: white; font-size: 12px;`;
+      btn.textContent = bg.name;
+      btn.addEventListener('click', () => {
+        appState.settings.background = bg.value;
+        appState.settings.customBgUrl = '';
+        saveSettings();
+        applyBackground();
+        // Update button styles
+        document.querySelectorAll('#bg-presets button').forEach(b => {
+          b.style.border = '1px solid rgba(255,255,255,0.3)';
+        });
+        btn.style.border = '2px solid white';
+      });
+      bgPresets.appendChild(btn);
+    });
+  }
+}
+
+function attachAppsListeners(windowEl) {
+  const appsGrid = windowEl.querySelector('#apps-grid');
+  appsGrid.innerHTML = '';
+
+  APPS_DATABASE.forEach(app => {
+    const appCard = document.createElement('div');
+    appCard.style.cssText = 'background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; transition: all 0.3s;';
+    appCard.innerHTML = `
+      <div style="font-size: 32px; margin-bottom: 5px;">${app.icon}</div>
+      <div style="font-size: 12px; color: var(--text-primary);">${app.name}</div>
+    `;
+    appCard.addEventListener('mouseover', () => {
+      appCard.style.background = 'rgba(183, 148, 246, 0.2)';
+    });
+    appCard.addEventListener('mouseout', () => {
+      appCard.style.background = 'rgba(0,0,0,0.3)';
+    });
+    appCard.addEventListener('click', () => {
+      const encoded = btoa(app.url);
+      window.open(`/proxy.html?url=${encoded}`, 'app_window', 'width=1200,height=800');
+    });
+    appsGrid.appendChild(appCard);
+  });
 }
 
 function updateTaskbar() {
@@ -536,7 +561,6 @@ function updateTaskbar() {
     btn.className = 'taskbar-app active';
     btn.textContent = getWindowTitle(type);
     btn.addEventListener('click', () => {
-      // Focus windows of this type
       const windows = document.querySelectorAll('.window');
       windows.forEach(w => w.classList.remove('active'));
       appState.windows
@@ -640,8 +664,9 @@ function filterGamesAndDisplay(searchQuery = '', categoryFilter = 'all') {
 }
 
 function launchGame(game) {
-  // Open proxy with game
-  window.open(`/proxy.html?game=${game.id}`, 'game_window', 'width=1200,height=800');
+  const url = game.url || `https://${game.id.replace(/-/g, '.')}.com`;
+  const encoded = btoa(url);
+  window.open(`/proxy.html?url=${encoded}`, 'game_window', 'width=1200,height=800');
 }
 
 // ============ SCREEN TRANSITIONS ============
@@ -680,5 +705,4 @@ function startClockUpdate() {
   setInterval(updateClock, 1000);
 }
 
-// ============ APP INITIALIZATION COMPLETE ============
 console.log('StudyHub v4 initialized. Password: unblock');
