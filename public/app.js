@@ -1,708 +1,680 @@
-// ============ GAME LIBRARY - 250+ TITLES ============
+// ============================================================================
+// STUDYHUB v4 - FULL STACK
+// ============================================================================
+
 const GAMES_DATABASE = [
-  { id: 'ages-of-conflict', name: 'Ages of Conflict', category: 'action', icon: '⚔️', url: 'https://www.crazygames.com/game/ages-of-conflict' },
-  { id: 'bonk-io', name: 'Bonk.io', category: 'action', icon: '💥', url: 'https://bonk.io' },
-  { id: 'chess-com', name: 'Chess.com', category: 'strategy', icon: '♟️', url: 'https://chess.com' },
-  { id: 'cluster-truck', name: 'Cluster Truck', category: 'action', icon: '🚚', url: 'https://www.crazygames.com/game/cluster-truck' },
-  { id: 'geoguessr', name: 'Geoguessr', category: 'puzzle', icon: '🗺️', url: 'https://geoguessr.com' },
-  { id: 'lolbeans-io', name: 'Lolbeans.io', category: 'action', icon: '🫘', url: 'https://lolbeans.io' },
-  { id: 'mindustry', name: 'Mindustry', category: 'strategy', icon: '⚙️', url: 'https://mindustrygame.github.io' },
-  { id: 'portal-2', name: 'Portal 2', category: 'puzzle', icon: '🚪', url: 'https://www.crazygames.com/game/portal-2' },
-  { id: 'rimworld', name: 'Rimworld', category: 'strategy', icon: '🌍', url: 'https://rimworldgame.com' },
-  { id: 'skribbl-io', name: 'Skribbl.io', category: 'casual', icon: '🎨', url: 'https://skribbl.io' },
-  { id: 'super-tux-kart', name: 'Super Tux Kart', category: 'racing', icon: '🐧', url: 'https://supertuxkart.net' },
-  { id: 'worldbox', name: 'Worldbox', category: 'strategy', icon: '🌎', url: 'https://www.worldbox.io' },
+  { id: 'chess-com', name: 'Chess.com', category: 'Strategy', icon: '♟️', url: 'https://www.chess.com' },
+  { id: 'geoguessr', name: 'GeoGuessr', category: 'Geography', icon: '🌍', url: 'https://www.geoguessr.com' },
+  { id: 'skribbl', name: 'Skribbl.io', category: 'Drawing', icon: '🎨', url: 'https://skribbl.io' },
+  { id: 'agar', name: 'Agar.io', category: 'Multiplayer', icon: '⚫', url: 'https://agar.io' },
+  { id: 'slither', name: 'Slither.io', category: 'Multiplayer', icon: '🐍', url: 'https://slither.io' },
+  { id: 'wordle', name: 'Wordle', category: 'Puzzle', icon: '🎯', url: 'https://www.nytimes.com/games/wordle' },
+  { id: '2048', name: '2048', category: 'Puzzle', icon: '🔢', url: 'https://play2048.co' },
+  { id: 'tetris', name: 'Tetris', category: 'Classic', icon: '⬛', url: 'https://tetris.com' },
+  { id: 'flappy', name: 'Flappy Bird', category: 'Arcade', icon: '🐦', url: 'https://flappybird.io' },
+  { id: 'dino', name: 'Chrome Dino', category: 'Arcade', icon: '🦖', url: 'https://chromedino.com' },
+  { id: 'breakout', name: 'Breakout', category: 'Arcade', icon: '🎮', url: 'https://playbreakout.online' },
+  { id: 'pacman', name: 'Pac-Man', category: 'Classic', icon: '👾', url: 'https://pacman.live' },
 ];
 
 const APPS_DATABASE = [
-  { id: 'geforce-now', name: 'Geforce NOW', category: 'gaming', icon: '🎮', url: 'https://play.geforcenow.com' },
-  { id: 'android-emulator', name: 'Android Emulator', category: 'emulator', icon: '📱', url: 'https://www.emulator.online/' },
-  { id: 'chrome', name: 'Chrome', category: 'browser', icon: '🌐', url: 'https://google.com' },
-  { id: 'firefox', name: 'Firefox', category: 'browser', icon: '🔥', url: 'https://firefox.com' },
-  { id: 'spotify', name: 'Spotify', category: 'media', icon: '🎵', url: 'https://spotify.com' },
-  { id: 'youtube', name: 'YouTube', category: 'media', icon: '📺', url: 'https://youtube.com' },
-  { id: 'reddit', name: 'Reddit', category: 'social', icon: '🤖', url: 'https://reddit.com' },
-  { id: 'discord', name: 'Discord', category: 'social', icon: '💬', url: 'https://discord.com' },
+  { id: 'geforce', name: 'GeForce NOW', icon: '🎮', url: 'https://play.geforcenow.com', category: 'Gaming' },
+  { id: 'android', name: 'Android Emulator', icon: '📱', url: 'https://www.emulator.online', category: 'Tools' },
+  { id: 'spotify', name: 'Spotify', icon: '🎵', url: 'https://www.spotify.com', category: 'Media' },
+  { id: 'youtube', name: 'YouTube', icon: '▶️', url: 'https://www.youtube.com', category: 'Media' },
+  { id: 'reddit', name: 'Reddit', icon: '🔗', url: 'https://www.reddit.com', category: 'Social' },
+  { id: 'discord', name: 'Discord', icon: '💬', url: 'https://discord.com', category: 'Social' },
+  { id: 'twitter', name: 'Twitter/X', icon: '𝕏', url: 'https://twitter.com', category: 'Social' },
 ];
 
-const BACKGROUND_PRESETS = [
-  { name: 'Deep Space', value: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%)' },
-  { name: 'Ocean Blue', value: 'linear-gradient(135deg, #001a4d 0%, #003d99 100%)' },
-  { name: 'Forest Green', value: 'linear-gradient(135deg, #0d3a0d 0%, #1a6b1a 100%)' },
-  { name: 'Sunset', value: 'linear-gradient(135deg, #4a0e4e 0%, #8b2e00 100%)' },
-  { name: 'Neon Cyan', value: 'linear-gradient(135deg, #0a3d62 0%, #00d4ff 100%)' },
-  { name: 'Dark Purple', value: 'linear-gradient(135deg, #1a0033 0%, #4d0099 100%)' },
-  { name: 'Midnight', value: '#0f0a1a' },
-];
+// ============================================================================
+// STATE MANAGEMENT
+// ============================================================================
 
-const COLOR_THEMES = [
-  { name: 'Purple', primary: '#b794f6', secondary: '#10b981', accent: '#d97706' },
-  { name: 'Cyan', primary: '#00d4ff', secondary: '#10b981', accent: '#fbbf24' },
-  { name: 'Magenta', primary: '#ec4899', secondary: '#10b981', accent: '#fbbf24' },
-  { name: 'Blue', primary: '#3b82f6', secondary: '#06b6d4', accent: '#f59e0b' },
-  { name: 'Green', primary: '#10b981', secondary: '#06b6d4', accent: '#f59e0b' },
-];
-
-// ============ STATE MANAGEMENT ============
-const appState = {
-  authenticated: false,
-  currentScreen: 'login',
-  windows: [],
-  taskbarApps: {},
-  gameFilters: 'all',
-  proxyType: 'scramjet-v2',
-  settings: {
-    theme: 'dark',
-    notifications: true,
-    autoSave: true,
-    colorTheme: 'Purple',
-    background: 'linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%)',
-    customBgUrl: '',
-  },
+let appState = {
+  currentWindow: 'desktop',
+  windows: new Map(),
+  password: 'unblock',
+  passwordEntered: false,
+  windowCounter: 0,
 };
 
-function loadSettings() {
-  const saved = localStorage.getItem('studyhubSettings');
-  if (saved) {
-    appState.settings = JSON.parse(saved);
-    applyTheme();
-    applyBackground();
-  }
-}
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 
-function saveSettings() {
-  localStorage.setItem('studyhubSettings', JSON.stringify(appState.settings));
-}
-
-function applyTheme() {
-  const theme = COLOR_THEMES.find(t => t.name === appState.settings.colorTheme);
-  if (theme) {
-    document.documentElement.style.setProperty('--primary', theme.primary);
-    document.documentElement.style.setProperty('--secondary', theme.secondary);
-    document.documentElement.style.setProperty('--accent', theme.accent);
-  }
-}
-
-function applyBackground() {
-  const osScreen = document.getElementById('os-screen');
-  if (osScreen) {
-    if (appState.settings.customBgUrl) {
-      osScreen.style.backgroundImage = `url('${appState.settings.customBgUrl}')`;
-      osScreen.style.backgroundSize = 'cover';
-      osScreen.style.backgroundPosition = 'center';
-    } else {
-      osScreen.style.background = appState.settings.background;
-      osScreen.style.backgroundImage = 'none';
-    }
-  }
-}
-
-// ============ PASSWORD CHECK ============
-const CORRECT_PASSWORD = 'unblock';
-
-// ============ INITIALIZE APP ============
 document.addEventListener('DOMContentLoaded', () => {
-  loadSettings();
   initializeApp();
-  startClockUpdate();
+  loadSettings();
+  registerServiceWorker();
 });
 
 function initializeApp() {
-  attachLoginListeners();
-  attachModeListeners();
-  attachOSListeners();
-  attachGameListeners();
-}
-
-// ============ LOGIN LOGIC ============
-function attachLoginListeners() {
-  const passwordInput = document.getElementById('password');
-  const loginBtn = document.getElementById('login-btn');
-  const errorMsg = document.getElementById('error-msg');
-
-  loginBtn.addEventListener('click', () => {
-    const password = passwordInput.value.trim();
-    
-    if (password === CORRECT_PASSWORD) {
-      appState.authenticated = true;
-      errorMsg.classList.remove('show');
-      transitionToScreen('mode');
-      passwordInput.value = '';
-    } else {
-      errorMsg.textContent = '❌ Invalid code. Try again.';
-      errorMsg.classList.add('show');
-      passwordInput.value = '';
-      passwordInput.focus();
-    }
-  });
-
-  passwordInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      loginBtn.click();
-    }
-  });
-
-  passwordInput.focus();
-}
-
-// ============ MODE SELECTION ============
-function attachModeListeners() {
-  const modeCards = document.querySelectorAll('.mode-card');
-
-  modeCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const mode = card.dataset.mode;
-      if (mode === 'os') {
-        transitionToScreen('os');
-        applyBackground();
-      } else if (mode === 'games') {
-        transitionToScreen('games');
-        populateGamesGrid();
-      }
-    });
-  });
-}
-
-// ============ OS LOGIC ============
-function attachOSListeners() {
-  const menuItems = document.querySelectorAll('.menu-item');
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const windowId = item.dataset.window;
-      openWindow(windowId);
-    });
-  });
-
-  const logoutBtn = document.getElementById('logout-btn');
-  logoutBtn.addEventListener('click', () => {
-    transitionToScreen('login');
-    appState.windows = [];
-    updateTaskbar();
-  });
-
-  updateClock();
-}
-
-function openWindow(type) {
-  const windowId = `window-${type}-${Date.now()}`;
+  const osScreen = document.getElementById('os-screen');
+  const taskbar = document.getElementById('taskbar');
   
-  const windowEl = document.createElement('div');
-  windowEl.className = 'window active';
-  windowEl.id = windowId;
-
-  const header = document.createElement('div');
-  header.className = 'window-header';
-  
-  const titleEl = document.createElement('div');
-  titleEl.className = 'window-title';
-  titleEl.textContent = getWindowTitle(type).toUpperCase();
-
-  const controls = document.createElement('div');
-  controls.className = 'window-controls';
-
-  const minBtn = document.createElement('button');
-  minBtn.className = 'window-btn';
-  minBtn.onclick = () => windowEl.style.display = 'none';
-
-  const maxBtn = document.createElement('button');
-  maxBtn.className = 'window-btn';
-  maxBtn.onclick = () => {
-    if (windowEl.style.width === '100%') {
-      windowEl.style.width = '';
-      windowEl.style.height = '';
-      windowEl.style.top = '';
-      windowEl.style.left = '';
-    } else {
-      windowEl.style.width = '100%';
-      windowEl.style.height = 'calc(100% - 112px)';
-      windowEl.style.top = '56px';
-      windowEl.style.left = '0';
+  osScreen.addEventListener('click', (e) => {
+    if (e.target === osScreen) {
+      closeAllWindows();
     }
-  };
+  });
 
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'window-btn window-close';
-  closeBtn.onclick = () => {
-    windowEl.remove();
-    const index = appState.windows.findIndex(w => w.id === windowId);
-    if (index > -1) appState.windows.splice(index, 1);
-    updateTaskbar();
-    updateEmptyState();
-  };
+  renderTaskbar();
+  showPasswordPrompt();
+}
 
-  controls.appendChild(minBtn);
-  controls.appendChild(maxBtn);
-  controls.appendChild(closeBtn);
-
-  header.appendChild(titleEl);
-  header.appendChild(controls);
-
-  const content = document.createElement('div');
-  content.className = 'window-content';
-  content.innerHTML = getWindowContent(type);
-
-  windowEl.appendChild(header);
-  windowEl.appendChild(content);
-
-  makeDraggable(windowEl, header);
-
-  const minX = 280;
-  const maxX = window.innerWidth - 500;
-  const minY = 56;
-  const maxY = window.innerHeight - 300;
-
-  windowEl.style.left = (Math.random() * (maxX - minX) + minX) + 'px';
-  windowEl.style.top = (Math.random() * (maxY - minY) + minY) + 'px';
-  windowEl.style.width = '500px';
-  windowEl.style.height = '400px';
-
-  document.getElementById('windows-container').appendChild(windowEl);
-
-  appState.windows.push({ id: windowId, type });
-  updateTaskbar();
-  updateEmptyState();
-
-  if (type === 'settings') {
-    attachSettingsListeners(windowEl);
-  } else if (type === 'apps') {
-    attachAppsListeners(windowEl);
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch((error) => console.error('Service Worker error:', error));
   }
+}
+
+// ============================================================================
+// PASSWORD SYSTEM
+// ============================================================================
+
+function showPasswordPrompt() {
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  `;
+
+  modal.innerHTML = `
+    <div style="text-align: center; color: #b794f6;">
+      <h1 style="font-size: 48px; margin-bottom: 20px;">🔐 StudyHub</h1>
+      <p style="font-size: 14px; color: #999; margin-bottom: 20px;">Enter password to unlock</p>
+      <input 
+        type="password" 
+        id="passwordInput" 
+        placeholder="Password" 
+        style="
+          padding: 12px 16px;
+          background: rgba(183, 148, 246, 0.1);
+          border: 1px solid #b794f6;
+          border-radius: 6px;
+          color: #b794f6;
+          font-size: 14px;
+          width: 300px;
+          text-align: center;
+          outline: none;
+        "
+      >
+      <p style="font-size: 12px; color: #666; margin-top: 20px;">Hint: educational platform</p>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const input = document.getElementById('passwordInput');
+  input.focus();
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      if (input.value === appState.password) {
+        appState.passwordEntered = true;
+        modal.remove();
+      } else {
+        input.value = '';
+        input.style.borderColor = '#ff6b6b';
+        setTimeout(() => {
+          input.style.borderColor = '#b794f6';
+        }, 500);
+      }
+    }
+  });
+}
+
+// ============================================================================
+// WINDOW MANAGEMENT
+// ============================================================================
+
+function createWindow(type, title, icon = '📦') {
+  if (!appState.passwordEntered) {
+    showPasswordPrompt();
+    return;
+  }
+
+  const windowId = `window-${appState.windowCounter++}`;
+  const osScreen = document.getElementById('os-screen');
+
+  const windowEl = document.createElement('div');
+  windowEl.id = windowId;
+  windowEl.className = 'window';
+  windowEl.style.cssText = `
+    position: absolute;
+    width: 800px;
+    height: 600px;
+    background: #1a1a2e;
+    border: 1px solid rgba(183, 148, 246, 0.2);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    left: ${50 + appState.windowCounter * 20}px;
+    top: ${50 + appState.windowCounter * 20}px;
+  `;
+
+  windowEl.innerHTML = `
+    <div style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(183, 148, 246, 0.1);
+      border-bottom: 1px solid rgba(183, 148, 246, 0.2);
+      border-radius: 8px 8px 0 0;
+      cursor: move;
+      user-select: none;
+    " class="window-title-bar">
+      <span style="font-weight: 600; font-size: 14px; color: #b794f6;">${icon} ${title}</span>
+      <button class="close-btn" style="
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 20px;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">×</button>
+    </div>
+    <div class="window-content" style="
+      flex: 1;
+      overflow: hidden;
+      background: #0f0a1a;
+    "></div>
+  `;
+
+  osScreen.appendChild(windowEl);
+
+  // Window controls
+  const closeBtn = windowEl.querySelector('.close-btn');
+  closeBtn.addEventListener('click', () => {
+    windowEl.remove();
+    appState.windows.delete(windowId);
+  });
+
+  // Dragging
+  const titleBar = windowEl.querySelector('.window-title-bar');
+  makeDraggable(windowEl, titleBar);
+
+  // Window-specific content
+  const contentDiv = windowEl.querySelector('.window-content');
+  renderWindowContent(type, contentDiv, windowId);
+
+  appState.windows.set(windowId, { type, title, element: windowEl });
+  return windowId;
 }
 
 function makeDraggable(element, handle) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
 
-  handle.onmousedown = dragMouseDown;
+  handle.addEventListener('mousedown', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    const rect = element.getBoundingClientRect();
+    offsetX = mouseX - rect.left;
+    offsetY = mouseY - rect.top;
 
-  function dragMouseDown(e) {
-    e.preventDefault();
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-  }
+    const moveFn = (moveEvent) => {
+      element.style.left = (moveEvent.clientX - offsetX) + 'px';
+      element.style.top = (moveEvent.clientY - offsetY) + 'px';
+    };
 
-  function elementDrag(e) {
-    e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    element.style.top = (element.offsetTop - pos2) + 'px';
-    element.style.left = (element.offsetLeft - pos1) + 'px';
-  }
+    const upFn = () => {
+      document.removeEventListener('mousemove', moveFn);
+      document.removeEventListener('mouseup', upFn);
+    };
 
-  function closeDragElement() {
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
+    document.addEventListener('mousemove', moveFn);
+    document.addEventListener('mouseup', upFn);
+  });
 }
 
-function getWindowTitle(type) {
-  const titles = {
-    browser: '🌐 Browser',
-    movies: '🎬 Movies',
-    games: '🎮 Games',
-    chat: '💬 Chat',
-    notes: '📝 Notes',
-    files: '📁 Files',
-    calendar: '📅 Calendar',
-    terminal: '💻 Terminal',
-    apps: '📱 App Store',
-    settings: '⚙️ Settings',
-  };
-  return titles[type] || 'Window';
-}
-
-function getWindowContent(type) {
-  const proxyOptions = `
-    <label style="display: block; margin-bottom: 10px;">
-      <input type="radio" name="proxy" value="uv" ${appState.proxyType === 'uv' ? 'checked' : ''} onchange="appState.proxyType='uv'; saveSettings();"> UV
-    </label>
-    <label style="display: block; margin-bottom: 10px;">
-      <input type="radio" name="proxy" value="scramjet-v2" ${appState.proxyType === 'scramjet-v2' ? 'checked' : ''} onchange="appState.proxyType='scramjet-v2'; saveSettings();"> Scramjet v2 (Default)
-    </label>
-    <label style="display: block;">
-      <input type="radio" name="proxy" value="scramjet-v1" ${appState.proxyType === 'scramjet-v1' ? 'checked' : ''} onchange="appState.proxyType='scramjet-v1'; saveSettings();"> Scramjet v1
-    </label>
+function renderWindowContent(type, container, windowId) {
+  container.style.cssText = `
+    padding: 20px;
+    color: #e0e0e0;
+    font-size: 14px;
+    overflow-y: auto;
   `;
 
-  const contents = {
-    browser: `<div style="padding: 20px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">🌐</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">Web Browser</h3>
-      <input type="text" placeholder="Enter URL..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary); margin-bottom: 15px;">
-      <button style="width: 100%; padding: 8px; background: var(--primary); color: var(--bg-darkest); border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Navigate</button>
-    </div>`,
-    
-    movies: `<div style="padding: 20px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">🎬</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">Movie Streaming</h3>
-      <p style="color: var(--text-secondary); margin-bottom: 15px;">Use the browser proxy to access streaming sites</p>
-    </div>`,
-    
-    games: `<div style="padding: 20px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">🎮</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">Game Launcher</h3>
-      <p style="color: var(--text-secondary); margin-bottom: 15px;">250+ Unblocked Games Available</p>
-      <button style="width: 100%; padding: 8px; background: var(--secondary); color: var(--bg-darkest); border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Open Game Library</button>
-    </div>`,
-    
-    chat: `<div style="padding: 20px;">
-      <div style="font-size: 48px; text-align: center; margin-bottom: 20px;">💬</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary); text-align: center;">Chat</h3>
-      <div style="background: rgba(0,0,0,0.3); border-radius: 6px; padding: 10px; margin-bottom: 15px; height: 200px; overflow-y: auto; color: var(--text-secondary); font-size: 12px;">
-        Chat messages would appear here...
-      </div>
-      <input type="text" placeholder="Type message..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary);">
-    </div>`,
-    
-    notes: `<div style="padding: 20px;">
-      <div style="font-size: 48px; text-align: center; margin-bottom: 20px;">📝</div>
-      <textarea placeholder="Write notes here..." style="width: 100%; height: 300px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary); font-family: monospace; resize: none;"></textarea>
-    </div>`,
-    
-    files: `<div style="padding: 20px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">📁</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">File Manager</h3>
-      <p style="color: var(--text-secondary);">Documents • Downloads • Pictures</p>
-    </div>`,
-    
-    calendar: `<div style="padding: 20px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
-      <h3 style="margin-bottom: 20px; color: var(--primary);">Calendar</h3>
-      <p style="color: var(--text-secondary);" id="calendar-date">Loading...</p>
-    </div>`,
-    
-    terminal: `<div style="padding: 20px;">
-      <div style="background: rgba(0,0,0,0.6); border-radius: 6px; padding: 15px; font-family: monospace; color: var(--secondary); font-size: 12px; margin-bottom: 15px; height: 250px; overflow-y: auto;">
-        <div>studyhub@system:~$ echo "Terminal Ready"</div>
-        <div style="color: var(--secondary);">Terminal Ready</div>
-        <div style="margin-top: 10px;">studyhub@system:~$ _</div>
-      </div>
-      <input type="text" placeholder="Command..." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary); font-family: monospace;">
-    </div>`,
-    
-    apps: `<div style="padding: 20px;">
-      <h3 style="margin-bottom: 20px; color: var(--primary);">📱 App Store</h3>
-      <div id="apps-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-height: 300px; overflow-y: auto;">
-      </div>
-    </div>`,
-    
-    settings: `<div style="padding: 20px; max-height: 400px; overflow-y: auto;">
-      <h3 style="margin-bottom: 20px; color: var(--primary);">⚙️ Settings & Preferences</h3>
+  switch (type) {
+    case 'browser':
+      container.innerHTML = `
+        <div style="height: 100%; display: flex; flex-direction: column;">
+          <input type="text" id="browser-url-${windowId}" placeholder="Enter URL..." style="
+            padding: 8px;
+            background: rgba(183, 148, 246, 0.1);
+            border: 1px solid #b794f6;
+            border-radius: 4px;
+            color: #e0e0e0;
+            margin-bottom: 12px;
+          ">
+          <button onclick="launchBrowser('${windowId}')" style="
+            padding: 8px 16px;
+            background: #b794f6;
+            border: none;
+            border-radius: 4px;
+            color: #0f0a1a;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+          ">Open in Proxy</button>
+          <iframe id="browser-frame-${windowId}" style="
+            flex: 1;
+            border: none;
+            border-radius: 4px;
+            display: none;
+          "></iframe>
+        </div>
+      `;
+      break;
+
+    case 'games':
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; height: 100%; overflow-y: auto;">
+          ${GAMES_DATABASE.map(game => `
+            <div onclick="launchGame('${game.url}', '${game.name}')" style="
+              padding: 16px;
+              background: rgba(183, 148, 246, 0.1);
+              border: 1px solid rgba(183, 148, 246, 0.3);
+              border-radius: 6px;
+              cursor: pointer;
+              transition: all 0.3s;
+              text-align: center;
+            " class="game-card" onmouseover="this.style.background='rgba(183, 148, 246, 0.2)'" onmouseout="this.style.background='rgba(183, 148, 246, 0.1)'">
+              <div style="font-size: 32px; margin-bottom: 8px;">${game.icon}</div>
+              <div style="font-weight: 600; font-size: 13px;">${game.name}</div>
+              <div style="font-size: 11px; color: #999; margin-top: 4px;">${game.category}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      break;
+
+    case 'apps':
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; height: 100%; overflow-y: auto;">
+          ${APPS_DATABASE.map(app => `
+            <div onclick="launchApp('${app.url}', '${app.name}')" style="
+              padding: 16px;
+              background: rgba(16, 185, 129, 0.1);
+              border: 1px solid rgba(16, 185, 129, 0.3);
+              border-radius: 6px;
+              cursor: pointer;
+              transition: all 0.3s;
+              text-align: center;
+            " onmouseover="this.style.background='rgba(16, 185, 129, 0.2)'" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)'">
+              <div style="font-size: 32px; margin-bottom: 8px;">${app.icon}</div>
+              <div style="font-weight: 600; font-size: 13px;">${app.name}</div>
+              <div style="font-size: 11px; color: #999; margin-top: 4px;">${app.category}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      break;
+
+    case 'chat':
+      container.innerHTML = `
+        <div style="display: flex; flex-direction: column; height: 100%;">
+          <div id="chat-messages" style="
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+          "></div>
+          <div style="display: flex; gap: 8px;">
+            <input 
+              type="text" 
+              id="chat-input-${windowId}" 
+              placeholder="Type a message..." 
+              style="
+                flex: 1;
+                padding: 8px;
+                background: rgba(183, 148, 246, 0.1);
+                border: 1px solid #b794f6;
+                border-radius: 4px;
+                color: #e0e0e0;
+                font-size: 12px;
+              "
+            >
+            <button onclick="sendChatMessage('${windowId}')" style="
+              padding: 8px 16px;
+              background: #b794f6;
+              border: none;
+              border-radius: 4px;
+              color: #0f0a1a;
+              font-weight: 600;
+              cursor: pointer;
+              font-size: 12px;
+            ">Send</button>
+          </div>
+        </div>
+      `;
       
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Proxy Selection</h4>
-        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px;">
-          ${proxyOptions}
+      const chatInput = document.getElementById(`chat-input-${windowId}`);
+      chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          sendChatMessage(windowId);
+        }
+      });
+      break;
+
+    case 'settings':
+      renderSettings(container);
+      break;
+
+    default:
+      container.innerHTML = `<p>Window type: ${type}</p>`;
+  }
+}
+
+function renderSettings(container) {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+
+  container.innerHTML = `
+    <div style="max-width: 400px;">
+      <div style="margin-bottom: 24px;">
+        <h3 style="color: #10b981; margin-bottom: 12px; font-size: 14px;">🔗 Proxy Service</h3>
+        <select id="proxySelect" onchange="setProxyService(this.value)" style="
+          width: 100%;
+          padding: 8px;
+          background: rgba(16, 185, 129, 0.1);
+          border: 1px solid #10b981;
+          border-radius: 4px;
+          color: #10b981;
+          font-size: 12px;
+          margin-bottom: 8px;
+        ">
+          <option value="sj2" ${settings.proxyService === 'sj2' ? 'selected' : ''}>Scramjet v2 (Default)</option>
+          <option value="sj1" ${settings.proxyService === 'sj1' ? 'selected' : ''}>Scramjet v1</option>
+          <option value="uv" ${settings.proxyService === 'uv' ? 'selected' : ''}>UV (Ultraviolet)</option>
+        </select>
+        <p style="font-size: 11px; color: #999; margin: 0;">Current: ${settings.proxyService === 'uv' ? 'UV' : settings.proxyService === 'sj1' ? 'Scramjet v1' : 'Scramjet v2 (Default)'}</p>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <h3 style="color: #b794f6; margin-bottom: 12px; font-size: 14px;">🎨 Color Theme</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          ${['Purple', 'Cyan', 'Magenta', 'Blue', 'Green'].map(theme => `
+            <button onclick="setColorTheme('${theme}')" style="
+              padding: 10px;
+              background: ${settings.colorTheme === theme ? '#b794f6' : 'rgba(183, 148, 246, 0.1)'};
+              border: 1px solid ${settings.colorTheme === theme ? '#b794f6' : 'rgba(183, 148, 246, 0.3)'};
+              border-radius: 4px;
+              color: ${settings.colorTheme === theme ? '#0f0a1a' : '#b794f6'};
+              font-weight: 600;
+              cursor: pointer;
+              font-size: 12px;
+            ">${theme}</button>
+          `).join('')}
         </div>
       </div>
 
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Color Theme</h4>
-        <div id="theme-selector" style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <div style="margin-bottom: 24px;">
+        <h3 style="color: #b794f6; margin-bottom: 12px; font-size: 14px;">🎭 Proxy Mask</h3>
+        <select id="maskSelect" onchange="setProxyMask(this.value)" style="
+          width: 100%;
+          padding: 8px;
+          background: rgba(183, 148, 246, 0.1);
+          border: 1px solid #b794f6;
+          border-radius: 4px;
+          color: #b794f6;
+          font-size: 12px;
+        ">
+          <option value="ixl" ${settings.proxyMask === 'ixl' ? 'selected' : ''}>IXL - Math & English</option>
+          <option value="khan" ${settings.proxyMask === 'khan' ? 'selected' : ''}>Khan Academy</option>
+          <option value="canvas" ${settings.proxyMask === 'canvas' ? 'selected' : ''}>Canvas</option>
+          <option value="google" ${settings.proxyMask === 'google' ? 'selected' : ''}>Google Classroom</option>
+          <option value="schoology" ${settings.proxyMask === 'schoology' ? 'selected' : ''}>Schoology</option>
+        </select>
+        <p style="font-size: 11px; color: #999; margin-top: 8px;">The proxy will be labeled as your selected study app</p>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <h3 style="color: #b794f6; margin-bottom: 12px; font-size: 14px;">🎨 Background</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+          ${['Deep Space', 'Ocean Blue', 'Forest Green', 'Sunset', 'Neon Cyan', 'Dark Purple', 'Midnight'].map(bg => `
+            <button onclick="setBackground('${bg}')" style="
+              padding: 10px;
+              background: ${settings.background === bg ? '#10b981' : 'rgba(16, 185, 129, 0.1)'};
+              border: 1px solid ${settings.background === bg ? '#10b981' : 'rgba(16, 185, 129, 0.3)'};
+              border-radius: 4px;
+              color: ${settings.background === bg ? '#0f0a1a' : '#10b981'};
+              font-weight: 600;
+              cursor: pointer;
+              font-size: 11px;
+            ">${bg}</button>
+          `).join('')}
         </div>
       </div>
 
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Custom Color</h4>
-        <input type="color" id="custom-color" value="#b794f6" style="cursor: pointer; width: 60px; height: 40px; border: 1px solid var(--border-color); border-radius: 6px;">
+      <div style="padding: 12px; background: rgba(183, 148, 246, 0.1); border-radius: 4px; border: 1px solid rgba(183, 148, 246, 0.2);">
+        <p style="font-size: 12px; color: #999; margin: 0;">StudyHub v4.0 | Proxy: Scramjet v2 (Default)</p>
+        <p style="font-size: 12px; color: #999; margin: 8px 0 0 0;">Password: ${appState.password}</p>
       </div>
+    </div>
+  `;
+}
 
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Background</h4>
-        <div id="bg-presets" style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
-        </div>
-      </div>
+// ============================================================================
+// PROXY LAUNCHER
+// ============================================================================
 
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Custom Background URL</h4>
-        <input type="text" id="custom-bg-url" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--text-primary); margin-bottom: 10px;">
-        <button id="apply-bg-btn" style="width: 100%; padding: 8px; background: var(--primary); color: var(--bg-darkest); border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Apply Background</button>
-      </div>
-
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Display Preferences</h4>
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 10px;">
-          <input type="checkbox" id="theme-toggle" ${appState.settings.theme === 'dark' ? 'checked' : ''} style="cursor: pointer;"> Dark Mode
-        </label>
-      </div>
-
-      <div style="margin-bottom: 25px;">
-        <h4 style="color: var(--secondary); margin-bottom: 10px;">Notifications</h4>
-        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-          <input type="checkbox" id="notif-toggle" ${appState.settings.notifications ? 'checked' : ''} style="cursor: pointer;"> Enable Notifications
-        </label>
-      </div>
-    </div>`,
+function launchGame(url, name) {
+  const mask = JSON.parse(localStorage.getItem('studyhubSettings') || '{}').proxyMask || 'ixl';
+  sessionStorage.setItem('proxyMask', mask);
+  
+  const masks = {
+    'ixl': 'IXL - Math & English',
+    'khan': 'Khan Academy',
+    'canvas': 'Canvas - Learning Management',
+    'google': 'Google Classroom',
+    'schoology': 'Schoology',
   };
-  return contents[type] || '<div>Window content</div>';
+  
+  sessionStorage.setItem('proxyMaskTitle', masks[mask] || 'IXL - Math & English');
+  
+  // Redirect through aboutblank for history hiding
+  window.location.href = `/aboutblank.html?mask=${mask}`;
+  
+  // After redirect, proxy will load
+  setTimeout(() => {
+    const encoded = btoa(url);
+    window.location.href = `/proxy.html?url=${encoded}`;
+  }, 100);
 }
 
-function attachSettingsListeners(windowEl) {
-  const themeToggle = windowEl.querySelector('#theme-toggle');
-  const notifToggle = windowEl.querySelector('#notif-toggle');
-  const customColorInput = windowEl.querySelector('#custom-color');
-  const customBgInput = windowEl.querySelector('#custom-bg-url');
-  const applyBgBtn = windowEl.querySelector('#apply-bg-btn');
-  const themeSelector = windowEl.querySelector('#theme-selector');
-  const bgPresets = windowEl.querySelector('#bg-presets');
+function launchApp(url, name) {
+  launchGame(url, name);
+}
 
-  if (themeToggle) {
-    themeToggle.addEventListener('change', (e) => {
-      appState.settings.theme = e.target.checked ? 'dark' : 'light';
-      saveSettings();
-    });
+function launchBrowser(windowId) {
+  const urlInput = document.getElementById(`browser-url-${windowId}`);
+  const url = urlInput.value.trim();
+
+  if (!url) return;
+
+  let fullUrl = url;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    fullUrl = 'https://' + url;
   }
 
-  if (notifToggle) {
-    notifToggle.addEventListener('change', (e) => {
-      appState.settings.notifications = e.target.checked;
-      saveSettings();
-    });
-  }
+  const encoded = btoa(fullUrl);
+  const proxyUrl = `/uv/service?url=${encoded}`;
 
-  if (customColorInput) {
-    customColorInput.addEventListener('change', (e) => {
-      document.documentElement.style.setProperty('--primary', e.target.value);
-      appState.settings.colorTheme = 'Custom';
-      saveSettings();
-    });
-  }
+  const frame = document.getElementById(`browser-frame-${windowId}`);
+  frame.src = proxyUrl;
+  frame.style.display = 'block';
+}
 
-  if (applyBgBtn) {
-    applyBgBtn.addEventListener('click', () => {
-      const url = customBgInput.value.trim();
-      if (url) {
-        appState.settings.customBgUrl = url;
-        appState.settings.background = '';
-        saveSettings();
-        applyBackground();
-      }
-    });
-  }
+// ============================================================================
+// SETTINGS MANAGEMENT
+// ============================================================================
 
-  // Populate theme selector
-  if (themeSelector) {
-    COLOR_THEMES.forEach(theme => {
-      const btn = document.createElement('button');
-      btn.style.cssText = `padding: 8px 12px; background: linear-gradient(90deg, ${theme.primary} 0%, ${theme.secondary} 100%); border: ${appState.settings.colorTheme === theme.name ? '2px solid white' : '1px solid rgba(255,255,255,0.3)'}; border-radius: 6px; cursor: pointer; color: white; font-weight: 600; font-size: 12px;`;
-      btn.textContent = theme.name;
-      btn.addEventListener('click', () => {
-        appState.settings.colorTheme = theme.name;
-        applyTheme();
-        saveSettings();
-        // Update button styles
-        document.querySelectorAll('#theme-selector button').forEach(b => {
-          b.style.border = '1px solid rgba(255,255,255,0.3)';
-        });
-        btn.style.border = '2px solid white';
-      });
-      themeSelector.appendChild(btn);
-    });
-  }
+function setColorTheme(theme) {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+  settings.colorTheme = theme;
+  localStorage.setItem('studyhubSettings', JSON.stringify(settings));
+  applyTheme();
 
-  // Populate background presets
-  if (bgPresets) {
-    BACKGROUND_PRESETS.forEach(bg => {
-      const btn = document.createElement('button');
-      btn.style.cssText = `padding: 8px 12px; background: ${bg.value}; border: ${appState.settings.background === bg.value ? '2px solid white' : '1px solid rgba(255,255,255,0.3)'}; border-radius: 6px; cursor: pointer; color: white; font-size: 12px;`;
-      btn.textContent = bg.name;
-      btn.addEventListener('click', () => {
-        appState.settings.background = bg.value;
-        appState.settings.customBgUrl = '';
-        saveSettings();
-        applyBackground();
-        // Update button styles
-        document.querySelectorAll('#bg-presets button').forEach(b => {
-          b.style.border = '1px solid rgba(255,255,255,0.3)';
-        });
-        btn.style.border = '2px solid white';
-      });
-      bgPresets.appendChild(btn);
-    });
+  // Refresh settings window
+  const settingsWindow = Array.from(appState.windows.values()).find(w => w.type === 'settings');
+  if (settingsWindow) {
+    const content = settingsWindow.element.querySelector('.window-content');
+    renderSettings(content);
   }
 }
 
-function attachAppsListeners(windowEl) {
-  const appsGrid = windowEl.querySelector('#apps-grid');
-  appsGrid.innerHTML = '';
+function setProxyService(service) {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+  settings.proxyService = service;
+  localStorage.setItem('studyhubSettings', JSON.stringify(settings));
+  
+  // Refresh settings window
+  const settingsWindow = Array.from(appState.windows.values()).find(w => w.type === 'settings');
+  if (settingsWindow) {
+    const content = settingsWindow.element.querySelector('.window-content');
+    renderSettings(content);
+  }
+}
 
-  APPS_DATABASE.forEach(app => {
-    const appCard = document.createElement('div');
-    appCard.style.cssText = 'background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; transition: all 0.3s;';
-    appCard.innerHTML = `
-      <div style="font-size: 32px; margin-bottom: 5px;">${app.icon}</div>
-      <div style="font-size: 12px; color: var(--text-primary);">${app.name}</div>
+function setProxyMask(mask) {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+  settings.proxyMask = mask;
+  localStorage.setItem('studyhubSettings', JSON.stringify(settings));
+}
+
+function setBackground(bg) {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+  settings.background = bg;
+  localStorage.setItem('studyhubSettings', JSON.stringify(settings));
+  applyBackground();
+
+  // Refresh settings window
+  const settingsWindow = Array.from(appState.windows.values()).find(w => w.type === 'settings');
+  if (settingsWindow) {
+    const content = settingsWindow.element.querySelector('.window-content');
+    renderSettings(content);
+  }
+}
+
+function applyTheme() {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+  const themes = {
+    'Purple': ['#b794f6', '#10b981', '#d97706'],
+    'Cyan': ['#00d4ff', '#10b981', '#fbbf24'],
+    'Magenta': ['#ec4899', '#10b981', '#fbbf24'],
+    'Blue': ['#3b82f6', '#06b6d4', '#f59e0b'],
+    'Green': ['#10b981', '#06b6d4', '#f59e0b'],
+  };
+
+  const [primary, secondary, accent] = themes[settings.colorTheme] || themes['Purple'];
+  document.documentElement.style.setProperty('--primary', primary);
+  document.documentElement.style.setProperty('--secondary', secondary);
+  document.documentElement.style.setProperty('--accent', accent);
+}
+
+function applyBackground() {
+  const settings = JSON.parse(localStorage.getItem('studyhubSettings') || '{}');
+  const backgrounds = {
+    'Deep Space': 'radial-gradient(circle at 20% 50%, #1a0033 0%, #0f0a1a 100%)',
+    'Ocean Blue': 'linear-gradient(135deg, #0a1a3a 0%, #0f0a1a 100%)',
+    'Forest Green': 'linear-gradient(135deg, #0a3a1a 0%, #0f0a1a 100%)',
+    'Sunset': 'linear-gradient(135deg, #3a1a0a 0%, #0f0a1a 100%)',
+    'Neon Cyan': 'linear-gradient(135deg, #0a3a3a 0%, #0f0a1a 100%)',
+    'Dark Purple': 'linear-gradient(135deg, #2a0a4a 0%, #0f0a1a 100%)',
+    'Midnight': 'linear-gradient(135deg, #0a0a2a 0%, #0f0a1a 100%)',
+  };
+
+  const bg = backgrounds[settings.background] || backgrounds['Deep Space'];
+  document.getElementById('os-screen').style.background = bg;
+}
+
+function loadSettings() {
+  applyTheme();
+  applyBackground();
+}
+
+function closeAllWindows() {
+  appState.windows.forEach((w) => w.element.remove());
+  appState.windows.clear();
+}
+
+function sendChatMessage(windowId) {
+  const input = document.getElementById(`chat-input-${windowId}`);
+  const message = input.value.trim();
+  
+  if (!message) return;
+  
+  const messagesDiv = document.querySelector(`#${windowId.replace(/[^a-zA-Z0-9-]/g, '')} .window-content #chat-messages`);
+  if (!messagesDiv) return;
+  
+  // Add user message
+  const userMsg = document.createElement('div');
+  userMsg.style.cssText = `
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: rgba(183, 148, 246, 0.2);
+    border-radius: 4px;
+    text-align: right;
+    font-size: 12px;
+    color: #b794f6;
+  `;
+  userMsg.textContent = message;
+  messagesDiv.appendChild(userMsg);
+  
+  // Simulate response
+  setTimeout(() => {
+    const botMsg = document.createElement('div');
+    botMsg.style.cssText = `
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      background: rgba(16, 185, 129, 0.2);
+      border-radius: 4px;
+      text-align: left;
+      font-size: 12px;
+      color: #10b981;
     `;
-    appCard.addEventListener('mouseover', () => {
-      appCard.style.background = 'rgba(183, 148, 246, 0.2)';
-    });
-    appCard.addEventListener('mouseout', () => {
-      appCard.style.background = 'rgba(0,0,0,0.3)';
-    });
-    appCard.addEventListener('click', () => {
-      const encoded = btoa(app.url);
-      window.open(`/proxy.html?url=${encoded}`, 'app_window', 'width=1200,height=800');
-    });
-    appsGrid.appendChild(appCard);
-  });
+    botMsg.textContent = 'Got it! ' + message.split(' ')[0].toUpperCase();
+    messagesDiv.appendChild(botMsg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }, 500);
+  
+  input.value = '';
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-function updateTaskbar() {
-  const taskbarAppsContainer = document.getElementById('taskbar-apps');
-  taskbarAppsContainer.innerHTML = '';
-
-  const uniqueTypes = [...new Set(appState.windows.map(w => w.type))];
-
-  uniqueTypes.forEach(type => {
-    const btn = document.createElement('button');
-    btn.className = 'taskbar-app active';
-    btn.textContent = getWindowTitle(type);
-    btn.addEventListener('click', () => {
-      const windows = document.querySelectorAll('.window');
-      windows.forEach(w => w.classList.remove('active'));
-      appState.windows
-        .filter(w => w.type === type)
-        .forEach(w => {
-          const el = document.getElementById(w.id);
-          if (el) el.classList.add('active');
-        });
-    });
-    taskbarAppsContainer.appendChild(btn);
-  });
+function renderTaskbar() {
+  const taskbar = document.getElementById('taskbar');
+  taskbar.innerHTML = `
+    <div style="display: flex; gap: 8px;">
+      <button onclick="createWindow('browser', 'Browser', '🌐')" class="taskbar-btn">🌐 Browser</button>
+      <button onclick="createWindow('games', 'Games', '🎮')" class="taskbar-btn">🎮 Games</button>
+      <button onclick="createWindow('apps', 'Apps', '📦')" class="taskbar-btn">📦 Apps</button>
+      <button onclick="createWindow('chat', 'Chat', '💬')" class="taskbar-btn">💬 Chat</button>
+      <button onclick="createWindow('settings', 'Settings', '⚙️')" class="taskbar-btn">⚙️ Settings</button>
+    </div>
+  `;
 }
 
-function updateEmptyState() {
-  const emptyWorkspace = document.getElementById('empty-workspace');
-  if (appState.windows.length === 0) {
-    emptyWorkspace.style.display = 'flex';
-  } else {
-    emptyWorkspace.style.display = 'none';
-  }
-}
-
-// ============ GAMES SCREEN ============
-function attachGameListeners() {
-  const gamesBackBtn = document.getElementById('games-back');
-  const gamesSearch = document.getElementById('games-search');
-  const searchClear = document.getElementById('search-clear');
-  const filterTabs = document.querySelectorAll('.filter-tab');
-
-  gamesBackBtn.addEventListener('click', () => {
-    transitionToScreen('mode');
-  });
-
-  gamesSearch.addEventListener('input', (e) => {
-    const query = e.target.value.trim();
-    searchClear.style.display = query ? 'block' : 'none';
-    filterGamesAndDisplay(query, appState.gameFilters);
-  });
-
-  searchClear.addEventListener('click', () => {
-    gamesSearch.value = '';
-    searchClear.style.display = 'none';
-    filterGamesAndDisplay('', appState.gameFilters);
-    gamesSearch.focus();
-  });
-
-  filterTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      filterTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      appState.gameFilters = tab.dataset.filter;
-      const searchQuery = gamesSearch.value.trim();
-      filterGamesAndDisplay(searchQuery, appState.gameFilters);
-    });
-  });
-}
-
-function populateGamesGrid() {
-  filterGamesAndDisplay('', 'all');
-}
-
-function filterGamesAndDisplay(searchQuery = '', categoryFilter = 'all') {
-  const gamesGrid = document.getElementById('games-grid');
-  const gamesEmpty = document.getElementById('games-empty');
-  const gameCount = document.getElementById('game-count');
-
-  let filtered = GAMES_DATABASE;
-
-  if (searchQuery) {
-    filtered = filtered.filter(game =>
-      game.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      game.id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }
-
-  if (categoryFilter !== 'all') {
-    filtered = filtered.filter(game => game.category === categoryFilter);
-  }
-
-  gamesGrid.innerHTML = '';
-
-  if (filtered.length === 0) {
-    gamesEmpty.style.display = 'flex';
-    gamesGrid.style.display = 'none';
-  } else {
-    gamesEmpty.style.display = 'none';
-    gamesGrid.style.display = 'grid';
-    
-    filtered.forEach(game => {
-      const card = document.createElement('div');
-      card.className = 'game-card';
-      card.innerHTML = `<div class="game-icon">${game.icon}</div><div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%;">${game.name}</div>`;
-      card.addEventListener('click', () => {
-        launchGame(game);
-      });
-      gamesGrid.appendChild(card);
-    });
-  }
-
-  gameCount.textContent = filtered.length;
-}
-
-function launchGame(game) {
-  const url = game.url || `https://${game.id.replace(/-/g, '.')}.com`;
-  const encoded = btoa(url);
-  window.open(`/proxy.html?url=${encoded}`, 'game_window', 'width=1200,height=800');
-}
-
-// ============ SCREEN TRANSITIONS ============
-function transitionToScreen(screenName) {
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(s => s.classList.remove('active'));
-
-  const targetScreen = {
-    'login': '#login-screen',
-    'mode': '#mode-screen',
-    'os': '#os-screen',
-    'games': '#games-screen',
-  }[screenName];
-
-  if (targetScreen) {
-    document.querySelector(targetScreen).classList.add('active');
-    appState.currentScreen = screenName;
-  }
-}
-
-// ============ CLOCK & TIME ============
-function updateClock() {
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
-
-  const clockEl = document.getElementById('system-clock');
-  const dateEl = document.getElementById('system-date');
-
-  if (clockEl) clockEl.textContent = `${hours}:${minutes}`;
-  if (dateEl) dateEl.textContent = dayName;
-}
-
-function startClockUpdate() {
-  setInterval(updateClock, 1000);
-}
-
-console.log('StudyHub v4 initialized. Password: unblock');
+console.log('StudyHub v4 loaded. Password: unblock');
