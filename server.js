@@ -18,7 +18,6 @@ const PORT = process.env.PORT || 3000;
 // MIDDLEWARE
 // ============================================================================
 
-// Security headers
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -34,24 +33,20 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
 }));
 
-// CORS
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['*'],
 }));
 
-// Compression
 app.use(compression({
   level: 6,
   threshold: 1024,
 }));
 
-// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
 app.use(express.static(join(__dirname, 'public'), {
   maxAge: '1d',
   etag: false,
@@ -134,13 +129,9 @@ function injectProxyScript(html) {
 }
 
 // ============================================================================
-// UV PROXY ROUTES
+// PROXY ROUTES - UV (ULTRAVIOLET)
 // ============================================================================
 
-/**
- * Main proxy service endpoint
- * GET /uv/service?url=<base64-encoded-url>
- */
 app.get('/uv/service', async (req, res) => {
   try {
     const encodedUrl = req.query.url;
@@ -157,7 +148,7 @@ app.get('/uv/service', async (req, res) => {
       return res.status(400).json({ error: 'Invalid URL' });
     }
     
-    logger.info(`Proxying: ${validatedUrl}`);
+    logger.info(`[UV] Proxying: ${validatedUrl}`);
     
     const response = await fetch(validatedUrl, {
       headers: {
@@ -181,15 +172,11 @@ app.get('/uv/service', async (req, res) => {
     
     res.send(data);
   } catch (error) {
-    logger.error(`Proxy error: ${error.message}`);
+    logger.error(`[UV] Proxy error: ${error.message}`);
     res.status(500).json({ error: 'Proxy request failed', details: error.message });
   }
 });
 
-/**
- * Proxy API endpoint
- * POST /uv/api/proxy
- */
 app.post('/uv/api/proxy', express.json(), async (req, res) => {
   try {
     const { url, method = 'GET', headers = {}, body } = req.body;
@@ -228,10 +215,106 @@ app.post('/uv/api/proxy', express.json(), async (req, res) => {
   }
 });
 
-/**
- * UV health check
- * GET /uv/health
- */
+// ============================================================================
+// PROXY ROUTES - SCRAMJET V2 (DEFAULT)
+// ============================================================================
+
+app.get('/sj2/service', async (req, res) => {
+  try {
+    const encodedUrl = req.query.url;
+    
+    if (!encodedUrl) {
+      return res.status(400).json({ error: 'No URL provided' });
+    }
+    
+    const targetUrl = decodeUrl(encodedUrl);
+    const validatedUrl = validateUrl(targetUrl);
+    
+    if (!validatedUrl) {
+      logger.error(`Invalid URL: ${targetUrl}`);
+      return res.status(400).json({ error: 'Invalid URL' });
+    }
+    
+    logger.info(`[SJ2] Proxying: ${validatedUrl}`);
+    
+    const response = await fetch(validatedUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
+      timeout: 30000,
+    });
+    
+    const contentType = response.headers.get('content-type') || '';
+    const data = await response.text();
+    
+    res.set('Content-Type', contentType);
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('X-Frame-Options', 'ALLOWALL');
+    res.set('Cache-Control', 'no-cache, no-store');
+    
+    if (contentType.includes('text/html')) {
+      return res.send(injectProxyScript(data));
+    }
+    
+    res.send(data);
+  } catch (error) {
+    logger.error(`[SJ2] Proxy error: ${error.message}`);
+    res.status(500).json({ error: 'Proxy request failed', details: error.message });
+  }
+});
+
+// ============================================================================
+// PROXY ROUTES - SCRAMJET V1 (FALLBACK)
+// ============================================================================
+
+app.get('/sj1/service', async (req, res) => {
+  try {
+    const encodedUrl = req.query.url;
+    
+    if (!encodedUrl) {
+      return res.status(400).json({ error: 'No URL provided' });
+    }
+    
+    const targetUrl = decodeUrl(encodedUrl);
+    const validatedUrl = validateUrl(targetUrl);
+    
+    if (!validatedUrl) {
+      logger.error(`Invalid URL: ${targetUrl}`);
+      return res.status(400).json({ error: 'Invalid URL' });
+    }
+    
+    logger.info(`[SJ1] Proxying: ${validatedUrl}`);
+    
+    const response = await fetch(validatedUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
+      timeout: 30000,
+    });
+    
+    const contentType = response.headers.get('content-type') || '';
+    const data = await response.text();
+    
+    res.set('Content-Type', contentType);
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('X-Frame-Options', 'ALLOWALL');
+    res.set('Cache-Control', 'no-cache, no-store');
+    
+    if (contentType.includes('text/html')) {
+      return res.send(injectProxyScript(data));
+    }
+    
+    res.send(data);
+  } catch (error) {
+    logger.error(`[SJ1] Proxy error: ${error.message}`);
+    res.status(500).json({ error: 'Proxy request failed', details: error.message });
+  }
+});
+
+// ============================================================================
+// HEALTH & CONFIG ENDPOINTS
+// ============================================================================
+
 app.get('/uv/health', (req, res) => {
   res.json({
     status: 'healthy',
@@ -240,26 +323,18 @@ app.get('/uv/health', (req, res) => {
   });
 });
 
-/**
- * UV configuration endpoint
- * GET /uv/config
- */
 app.get('/uv/config', (req, res) => {
   res.json({
     prefix: '/uv/',
-    bare: '/bare/',
-    encodeUrl: true,
+    services: ['uv', 'sj2', 'sj1'],
     routes: {
-      service: '/uv/service',
-      api: '/uv/api/proxy',
-      health: '/uv/health',
+      uv: '/uv/service',
+      scramjet_v2: '/sj2/service',
+      scramjet_v1: '/sj1/service',
     },
   });
 });
 
-/**
- * Catch-all for UV static assets
- */
 app.use('/uv/assets', express.static(join(__dirname, 'public/uv/assets')));
 app.use('/uv/js', express.static(join(__dirname, 'public/uv/js')));
 app.use('/uv/css', express.static(join(__dirname, 'public/uv/css')));
@@ -272,6 +347,7 @@ app.get('/api/status', (req, res) => {
   res.json({
     status: 'online',
     version: '4.0.0',
+    proxies: ['UV', 'Scramjet v2 (Default)', 'Scramjet v1'],
     timestamp: new Date().toISOString(),
   });
 });
@@ -279,16 +355,18 @@ app.get('/api/status', (req, res) => {
 app.get('/api/proxy/config', (req, res) => {
   res.json({
     proxyEnabled: true,
-    services: ['uv', 'bare'],
+    services: ['uv', 'sj2', 'sj1'],
+    default: 'sj2',
     endpoints: {
       uv: '/uv/service',
-      api: '/uv/api/proxy',
+      scramjet_v2: '/sj2/service',
+      scramjet_v1: '/sj1/service',
     },
   });
 });
 
 // ============================================================================
-// ROOT ROUTE
+// ROOT ROUTES
 // ============================================================================
 
 app.get('/', (req, res) => {
@@ -297,6 +375,10 @@ app.get('/', (req, res) => {
 
 app.get('/proxy.html', (req, res) => {
   res.sendFile(join(__dirname, 'public/proxy.html'));
+});
+
+app.get('/aboutblank.html', (req, res) => {
+  res.sendFile(join(__dirname, 'public/aboutblank.html'));
 });
 
 // ============================================================================
@@ -361,8 +443,8 @@ process.on('SIGINT', () => {
 const server = app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
   logger.info(`Access at http://localhost:${PORT}`);
-  logger.info(`Proxy service at http://localhost:${PORT}/uv/service`);
-  logger.info(`API docs at http://localhost:${PORT}/api/status`);
+  logger.info(`Proxies: UV, Scramjet v2 (Default), Scramjet v1`);
+  logger.info(`Status at http://localhost:${PORT}/api/status`);
 });
 
 server.on('error', (err) => {
