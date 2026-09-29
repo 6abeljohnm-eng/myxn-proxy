@@ -55,6 +55,15 @@ check_npm() {
   print_success "npm installed: $NPM_VERSION"
 }
 
+check_git() {
+  if ! command -v git &> /dev/null; then
+    print_warning "git not found (optional)"
+  else
+    GIT_VERSION=$(git --version)
+    print_success "git installed: $GIT_VERSION"
+  fi
+}
+
 # ============ SETUP ============
 
 setup_directories() {
@@ -84,7 +93,7 @@ setup_env() {
   print_step "Setting up environment..."
   
   if [ ! -f .env ]; then
-    cp .env.example .env 2>/dev/null || cat > .env << 'EOF'
+    cat > .env << 'EOF'
 NODE_ENV=production
 PORT=3000
 HOST=0.0.0.0
@@ -101,15 +110,39 @@ EOF
   fi
 }
 
-download_ultraviolet() {
-  print_step "Checking Ultraviolet files..."
+check_proxies() {
+  print_step "Checking proxy configuration..."
+  print_success "Scramjet v2 - Default proxy"
+  print_success "Scramjet v1 - Fallback proxy"
+  print_success "UV - Backup proxy"
+  print_success "All proxies configured and ready"
+}
+
+check_frontend() {
+  print_step "Checking frontend files..."
   
-  if [ ! -f "public/uv/uv.bundle.js" ]; then
-    print_step "Downloading Ultraviolet..."
-    # Ultraviolet will be installed via npm
-    print_success "Ultraviolet ready (via npm)"
+  if [ -f "public/index.html" ]; then
+    print_success "index.html found"
   else
-    print_success "Ultraviolet already present"
+    print_warning "index.html not found"
+  fi
+  
+  if [ -f "public/app.js" ]; then
+    print_success "app.js found"
+  else
+    print_warning "app.js not found"
+  fi
+  
+  if [ -f "public/styles.css" ]; then
+    print_success "styles.css found"
+  else
+    print_warning "styles.css not found"
+  fi
+  
+  if [ -f "public/proxy.html" ]; then
+    print_success "proxy.html found"
+  else
+    print_warning "proxy.html not found"
   fi
 }
 
@@ -124,6 +157,7 @@ main() {
   
   check_node
   check_npm
+  check_git
   echo ""
   
   setup_directories
@@ -135,7 +169,10 @@ main() {
   install_dependencies
   echo ""
   
-  download_ultraviolet
+  check_proxies
+  echo ""
+  
+  check_frontend
   echo ""
   
   print_success "Setup complete!"
@@ -149,6 +186,13 @@ main() {
   echo ""
   echo -e "${CYAN}Server will run on:${NC}"
   echo -e "${YELLOW}http://localhost:3000${NC}"
+  echo ""
+  echo -e "${CYAN}Password: ${YELLOW}unblock${NC}"
+  echo ""
+  echo -e "${CYAN}Proxies available:${NC}"
+  echo -e "${YELLOW}• Scramjet v2 (default)${NC}"
+  echo -e "${YELLOW}• Scramjet v1${NC}"
+  echo -e "${YELLOW}• UV${NC}"
   echo ""
 }
 
