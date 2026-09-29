@@ -27,6 +27,8 @@
       background: var(--bg-darkest);
       color: var(--text-primary);
       overflow: hidden;
+      width: 100%;
+      height: 100vh;
     }
 
     .navbar {
@@ -54,6 +56,11 @@
       background: var(--primary);
       color: var(--bg-darkest);
       border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .url-bar {
@@ -96,6 +103,23 @@
       background: var(--secondary);
     }
 
+    .hide-btn {
+      padding: 8px 12px;
+      background: rgba(217, 119, 6, 0.2);
+      border: 1px solid rgba(217, 119, 6, 0.5);
+      border-radius: 6px;
+      color: #d97706;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .hide-btn:hover {
+      background: #d97706;
+      color: var(--bg-darkest);
+    }
+
     .iframe-container {
       width: 100%;
       height: calc(100vh - 56px);
@@ -116,10 +140,20 @@
       transform: translate(-50%, -50%);
       text-align: center;
       color: var(--text-secondary);
+      z-index: 1000;
     }
 
     .loading.active {
       display: block;
+    }
+
+    .mask-indicator {
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding: 4px 8px;
+      background: rgba(217, 119, 6, 0.1);
+      border-radius: 4px;
+      border: 1px solid rgba(217, 119, 6, 0.3);
     }
   </style>
 
@@ -139,20 +173,29 @@
       document.documentElement.style.setProperty('--secondary', secondary);
       document.documentElement.style.setProperty('--accent', accent);
     }
+
+    // Apply mask title
+    const maskTitle = sessionStorage.getItem('proxyMaskTitle');
+    if (maskTitle) {
+      document.title = maskTitle;
+    }
   </script>
 </head>
 <body>
 
   <div class="navbar">
-    <button class="nav-btn" onclick="goBack()">← Back</button>
-    <button class="nav-btn" onclick="goForward()">Forward →</button>
-    <button class="nav-btn" onclick="reload()">⟲ Reload</button>
+    <button class="nav-btn" id="back-btn" onclick="goBack()">← Back</button>
+    <button class="nav-btn" id="forward-btn" onclick="goForward()">Forward →</button>
+    <button class="nav-btn" id="reload-btn" onclick="reload()">⟲ Reload</button>
     
     <div class="url-bar">
       <span>🔒</span>
       <input type="text" class="url-input" id="urlInput" placeholder="Enter URL...">
       <button class="go-btn" onclick="navigate()">GO</button>
     </div>
+
+    <button class="hide-btn" onclick="hideProxy()">Hide 👁️</button>
+    <div class="mask-indicator" id="maskIndicator"></div>
   </div>
 
   <div class="iframe-container">
@@ -167,6 +210,10 @@
     const proxyFrame = document.getElementById('proxyFrame');
     const urlInput = document.getElementById('urlInput');
     const loading = document.getElementById('loading');
+    const maskIndicator = document.getElementById('maskIndicator');
+    const mask = sessionStorage.getItem('proxyMask') || 'ixl';
+
+    maskIndicator.textContent = `Masked as: ${mask.toUpperCase()}`;
 
     // Get URL from query parameter
     const params = new URLSearchParams(window.location.search);
@@ -215,15 +262,25 @@
     }
 
     function goBack() {
-      proxyFrame.contentWindow.history.back();
+      try {
+        proxyFrame.contentWindow.history.back();
+      } catch (e) {}
     }
 
     function goForward() {
-      proxyFrame.contentWindow.history.forward();
+      try {
+        proxyFrame.contentWindow.history.forward();
+      } catch (e) {}
     }
 
     function reload() {
       proxyFrame.src = proxyFrame.src;
+    }
+
+    function hideProxy() {
+      // Redirect to about:blank masking page with history wipe
+      window.history.pushState(null, '', '/aboutblank.html');
+      window.location.href = '/aboutblank.html?mask=' + mask;
     }
 
     urlInput.addEventListener('keydown', (e) => {
