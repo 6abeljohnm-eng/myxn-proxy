@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>about:blank</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: white;
+      font-family: system-ui;
+      overflow: hidden;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Silent redirect to app with masking
+    const mask = new URLSearchParams(window.location.search).get('mask') || 'ixl';
+    const masks = {
+      'ixl': { title: 'IXL - Math & English', icon: '📚' },
+      'khan': { title: 'Khan Academy', icon: '🎓' },
+      'canvas': { title: 'Canvas - Learning Management', icon: '📖' },
+      'google': { title: 'Google Classroom', icon: '✏️' },
+      'schoology': { title: 'Schoology', icon: '📝' },
+    };
+    
+    const selected = masks[mask] || masks['ixl'];
+    document.title = selected.title;
+    
+    // Store mask in sessionStorage for proxy window
+    sessionStorage.setItem('proxyMask', mask);
+    sessionStorage.setItem('proxyMaskTitle', selected.title);
+    
+    // Redirect to app
+    window.location.href = '/?masked=true';
+  </script>
+</body>
+</html>
